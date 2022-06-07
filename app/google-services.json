@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "920716799868",
+    "project_id": "kalori-3ee20",
+    "storage_bucket": "kalori-3ee20.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:920716799868:android:86fe89e281e4becf5dfef9",
+        "android_client_info": {
+          "package_name": "com.example.kalori"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "920716799868-or5dl3n1adrg8lranvjpp8m8j1a9a76l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0qxF4mHpdmHPeemVp-PvlkmkwJOPkgRs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "920716799868-or5dl3n1adrg8lranvjpp8m8j1a9a76l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
