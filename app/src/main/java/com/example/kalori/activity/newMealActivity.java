@@ -19,7 +19,7 @@ public class newMealActivity extends AppCompatActivity {
     Realm realm;
     SearchView searchView;
     ListView listView;
-    ArrayList<Meal> meals = new ArrayList<Meal>();
+    ArrayList<Meal> mealsArray = new ArrayList<Meal>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +31,6 @@ public class newMealActivity extends AppCompatActivity {
         search();
 
 
-
     }
 
     private void clickMeal(String[] meals) {
@@ -40,10 +39,38 @@ public class newMealActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Toast.makeText(newMealActivity.this, meals[i], Toast.LENGTH_SHORT).show();
+                String getMealName = meals[i];
+                Intent intent = new Intent(newMealActivity.this, MealDetailActivity.class);
+                intent.putExtra("key", getMealName);
+                String[] MealDetail = GetMealDetails(getMealName);
+                intent.putExtra("mealDetailKey", MealDetail);
+
+                startActivity(intent);
 
             }
         });
 
+    }
+
+    private String[] GetMealDetails(String getMealName) {
+        String[] allindexdata = getStrings();
+        String[] mealDetail = new String[7];
+        int i;
+        for (i = 0; i < allindexdata.length; i++) {
+            String s = allindexdata[i];
+            if (s == getMealName)
+                break;
+        }
+        Meal newMeal = mealsArray.get(i);
+        mealDetail[0] = newMeal.getMealName();
+        mealDetail[1] = newMeal.getAmount();
+        mealDetail[2] = newMeal.getServing();
+        mealDetail[3] = newMeal.getCarbohydrate();
+        mealDetail[4] = newMeal.getProtein();
+        mealDetail[5] = newMeal.getFat();
+        mealDetail[6] = newMeal.getCalorie();
+
+        return mealDetail;
     }
 
     private void search() {
@@ -88,7 +115,7 @@ public class newMealActivity extends AppCompatActivity {
     public String[] getStrings() {
         String[] mealName = new String[233];
         int i = 0;
-        for (Meal meal : meals) {
+        for (Meal meal : mealsArray) {
             mealName[i] = meal.getMealName().toString();
             i++;
         }
@@ -100,7 +127,7 @@ public class newMealActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.listMeal);
     }
 
-    private void listMeal() {
+    void listMeal() {
         InputStream is = getResources().openRawResource(R.raw.test);
 
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is, Charset.defaultCharset()))) {
@@ -119,7 +146,7 @@ public class newMealActivity extends AppCompatActivity {
                 newmeal.setProtein(newsatir[4]);
                 newmeal.setFat(newsatir[5]);
                 newmeal.setCalorie(newsatir[6]);
-                meals.add(newmeal);
+                mealsArray.add(newmeal);
 
 
                 i++;

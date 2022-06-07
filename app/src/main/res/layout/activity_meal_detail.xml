@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     tools:context=".activity.MealDetailActivity">
 
     <TextView
@@ -14,6 +14,193 @@
         android:textSize="25dp"
         android:gravity="center"
         />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Miktar"
+            android:textSize="20dp"
+            android:textAlignment="center"
+            android:layout_marginVertical="15dp"
+            android:layout_marginLeft="30dp"/>
+
+        <EditText
+            android:id="@+id/miktar"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:inputType="number"
+            android:layout_marginLeft="25dp"
+            android:gravity="center" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="19dp"
+            android:layout_marginTop="5dp"
+            android:text="gram"/>
+
+
+
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:text="Porsiyon"
+            android:textSize="20dp"
+            android:textAlignment="center"
+            android:layout_marginVertical="10dp"
+
+            />
+
+        <TextView
+            android:id="@+id/porsiyon"
+            android:layout_weight="3"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:inputType="number"
+            android:layout_marginLeft="25dp"
+            android:gravity="center" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Karbonhidrat: "
+            android:textSize="20dp"
+            android:textAlignment="center"
+            android:layout_marginVertical="15dp"
+            />
+
+        <TextView
+            android:id="@+id/karbonhidrat"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:inputType="number"
+            android:layout_marginLeft="25dp"
+            android:gravity="center" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:textSize="19dp"
+            android:layout_marginTop="5dp"
+            android:text="gram"/>
+
+
+
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Protein: "
+            android:textSize="20dp"
+            android:textAlignment="center"
+            android:layout_marginVertical="15dp"
+            />
+
+        <TextView
+            android:id="@+id/protein"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:inputType="number"
+            android:layout_marginLeft="25dp"
+            android:gravity="center" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:textSize="19dp"
+            android:layout_marginTop="5dp"
+            android:text="gram"/>
+
+
+
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Yağ: "
+            android:textSize="20dp"
+            android:textAlignment="center"
+            android:layout_marginVertical="15dp"
+           android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/yag"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:inputType="number"
+            android:layout_marginLeft="25dp"
+            android:gravity="center" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:textSize="19dp"
+            android:layout_marginTop="5dp"
+            android:text="gram"/>
+
+
+
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kalori: "
+            android:textSize="20dp"
+            android:textAlignment="center"
+            android:layout_marginVertical="15dp"
+            android:layout_marginLeft="30dp"/>
+
+        <TextView
+            android:id="@+id/kalori"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:inputType="number"
+            android:layout_marginLeft="25dp"
+            android:gravity="center" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="kalori"/>
+
+    </LinearLayout>
 
 
 
