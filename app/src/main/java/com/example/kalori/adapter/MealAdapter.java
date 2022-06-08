@@ -78,17 +78,20 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.myViewHolder> 
         public void onClick(View v){
             if(v==deleteimage){
                 deleteimage(getLayoutPosition());
+
             }
         }
 
         private void deleteimage(int position){
             RealmResults<addMealTable> mealTablesRealm = realm.where(addMealTable.class).findAll();
+            int realmposition=mealTablesRealm.size()-getItemCount()+position;
             realm.beginTransaction();
-            mealTablesRealm.deleteFromRealm(position);
+            mealTablesRealm.get(realmposition).deleteFromRealm();
             realm.commitTransaction();
             mealTables.remove(position);
             notifyItemRemoved(position);
             notifyItemRangeChanged(position,mealTables.size());
+
         }
     }
 }

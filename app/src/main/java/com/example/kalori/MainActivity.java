@@ -7,6 +7,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,10 +22,12 @@ import com.example.kalori.realm.userTable;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -33,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     int userLog;
     Realm realm;
 
-    TextView name_surname, weight_height, age, abki;
+    TextView name_surname, weight_height, age, abki,toplamKalori;
     Button istatistik, yeniogun, profil;
     RecyclerView list_recycler;
     LinearLayout mainPage ;
@@ -47,13 +51,16 @@ public class MainActivity extends AppCompatActivity {
         kontrol();
         kullanicibilgi();
         showList();
+        setToplamKalori();
     }
     @Override
     public void onResume()
-    {  // After a pause OR at startup
+    {  setToplamKalori();
         super.onResume();
         showList();
+        setToplamKalori();
     }
+
 
 
     public void realmTanimla() {
@@ -70,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         yeniogun = (Button) findViewById(R.id.newmeal);
         list_recycler = (RecyclerView) findViewById(R.id.recyler_view_list);
         mainPage = (LinearLayout) findViewById(R.id.mainpage);
+        toplamKalori = (TextView) findViewById(R.id.mainToplamKalori);
 
 
     }
@@ -89,9 +97,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showProfil() {
-        showList();
-//        Intent intent = new Intent(MainActivity.this, ProfilActivity.class);
-//        startActivity(intent);
+
+        Intent intent = new Intent(MainActivity.this, ProfilActivity.class);
+        startActivity(intent);
         
     }
 
@@ -144,15 +152,43 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showList(){
+        Toast.makeText(this, "selam", Toast.LENGTH_SHORT).show();
         List<addMealTable> addMealTables = new ArrayList<addMealTable>(realm.where(addMealTable.class).findAll());
-        MealAdapter adapter = new MealAdapter(addMealTables,this );
+        List<addMealTable> addMealTablesToday = new ArrayList<addMealTable>();
+
+        addMealTablesToday=getTodayList(addMealTables);
+
+        MealAdapter adapter = new MealAdapter(addMealTablesToday,this );
         list_recycler.setAdapter(adapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         list_recycler.setLayoutManager(linearLayoutManager);
-        adapter.notifyDataSetChanged();
     }
 
+
+    private List<addMealTable> getTodayList(List<addMealTable> addMealTables) {
+        List<addMealTable> newList = new ArrayList<>();
+        Date today = Date.from(Instant.now());
+
+        for(int i = 0; i< addMealTables.size(); i++){
+            Date itemDay = addMealTables.get(i).getDay();
+            if (itemDay.getDay() == today.getDay() && itemDay.getMonth() == today.getMonth() && itemDay.getYear() == today.getYear())
+                newList.add(addMealTables.get(i));
+
+
+        }
+
+        return newList;
+    }
+    public void setToplamKalori(){
+        List<addMealTable> addMealTables = new ArrayList<addMealTable>(realm.where(addMealTable.class).findAll());
+        List<addMealTable> todayMealList = getTodayList(addMealTables);
+        double toplamKaloridouble = 0;
+        for (int i = 0 ;i<todayMealList.size();i++){
+            toplamKaloridouble = toplamKaloridouble +todayMealList.get(i).getCalorie();
+        }
+        toplamKalori.setText(toplamKaloridouble+"");
+    }
 
 
 }
