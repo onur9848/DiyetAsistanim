@@ -2,19 +2,29 @@ package com.example.kalori;
 
 import android.content.Intent;
 import android.view.View;
+import android.view.inputmethod.InputMethod;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.example.kalori.activity.ProfilActivity;
 import com.example.kalori.activity.StatisticsActivity;
 import com.example.kalori.activity.newMealActivity;
+import com.example.kalori.adapter.MealAdapter;
+import com.example.kalori.realm.addMealTable;
 import com.example.kalori.realm.userTable;
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 
@@ -25,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
 
     TextView name_surname, weight_height, age, abki;
     Button istatistik, yeniogun, profil;
+    RecyclerView list_recycler;
+    LinearLayout mainPage ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +46,15 @@ public class MainActivity extends AppCompatActivity {
         tanimla();
         kontrol();
         kullanicibilgi();
-
+        showList();
     }
+    @Override
+    public void onResume()
+    {  // After a pause OR at startup
+        super.onResume();
+        showList();
+    }
+
 
     public void realmTanimla() {
         realm = Realm.getDefaultInstance();
@@ -49,6 +68,9 @@ public class MainActivity extends AppCompatActivity {
         istatistik = (Button) findViewById(R.id.statistics);
         profil = (Button) findViewById(R.id.profil);
         yeniogun = (Button) findViewById(R.id.newmeal);
+        list_recycler = (RecyclerView) findViewById(R.id.recyler_view_list);
+        mainPage = (LinearLayout) findViewById(R.id.mainpage);
+
 
     }
     public void clickAction(View view){
@@ -67,8 +89,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showProfil() {
-        Intent intent = new Intent(MainActivity.this, ProfilActivity.class);
-        startActivity(intent);
+        showList();
+//        Intent intent = new Intent(MainActivity.this, ProfilActivity.class);
+//        startActivity(intent);
         
     }
 
@@ -107,12 +130,6 @@ public class MainActivity extends AppCompatActivity {
         LocalDate dateNow = LocalDate.now();
         Period diff = Period.between(dateTime,dateNow);
         return ""+diff.getYears();
-
-
-
-
-
-
     }
 
     public void kontrol() {
@@ -125,5 +142,17 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
     }
+
+    private void showList(){
+        List<addMealTable> addMealTables = new ArrayList<addMealTable>(realm.where(addMealTable.class).findAll());
+        MealAdapter adapter = new MealAdapter(addMealTables,this );
+        list_recycler.setAdapter(adapter);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        list_recycler.setLayoutManager(linearLayoutManager);
+        adapter.notifyDataSetChanged();
+    }
+
+
 
 }

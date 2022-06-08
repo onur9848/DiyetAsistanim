@@ -2,16 +2,26 @@ package com.example.kalori.realm;
 
 import io.realm.RealmObject;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class addMealTable extends RealmObject {
 
     Date day;
     String mealName;
+    double mealAmount;
     double carbonhydrat;
     double protein;
     double fat;
     double calorie;
+
+    public double getMealAmount() {
+        return mealAmount;
+    }
+
+    public void setMealAmount(double mealAmount) {
+        this.mealAmount = mealAmount;
+    }
 
     public Date getDay() {
         return day;

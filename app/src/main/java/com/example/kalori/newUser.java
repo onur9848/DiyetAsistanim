@@ -128,7 +128,6 @@ public class newUser extends AppCompatActivity {
         }, new Realm.Transaction.OnSuccess() {
             @Override
             public void onSuccess() {
-                Toast.makeText(getApplicationContext(), "Teşekkürler", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(newUser.this, MainActivity.class);
                 startActivity(intent);
                 finish();

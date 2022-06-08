@@ -38,7 +38,7 @@ public class newMealActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(newMealActivity.this, meals[i], Toast.LENGTH_SHORT).show();
+//                Toast.makeText(newMealActivity.this, meals[i], Toast.LENGTH_SHORT).show();
                 String getMealName = meals[i];
                 Intent intent = new Intent(newMealActivity.this, MealDetailActivity.class);
                 intent.putExtra("key", getMealName);

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:tag="cards main container">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/example_card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@android:color/white"
+        app:cardCornerRadius="5dp"
+        android:layout_gravity="center"
+        app:cardElevation="1dp"
+        app:cardUseCompatPadding="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:background="#404040"
+            android:layout_height="wrap_content">
+
+
+            <TextView
+                android:id="@+id/listMealName"
+                android:layout_width="125dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Meal Name"
+                android:textColor="#ff5c25"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/listMakroDetail"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+
+            <TextView
+                android:id="@+id/listMakroDetail"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="50dp"
+                android:textColor="#D6D6D6"
+                android:text="10.2g protein 8.03g karbonhidrat 12g yağ"
+                android:layout_marginHorizontal="10dp"
+                app:layout_constraintEnd_toStartOf="@+id/listCalorieDetail"
+                app:layout_constraintStart_toEndOf="@+id/listMealName"
+                tools:ignore="MissingConstraints"
+                tools:layout_editor_absoluteY="5dp" />
+
+            <TextView
+                android:id="@+id/listCalorieDetail"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="144 kcal"
+                android:textColor="#05dcad"
+                android:textSize="18sp"
+                android:layout_marginHorizontal="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/listMakroDetail"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/deleteproduct"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/delete_button"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/listCalorieDetail"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>
