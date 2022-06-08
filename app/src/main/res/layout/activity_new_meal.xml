@@ -18,7 +18,7 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFEB3B"
+        android:background="#000E5E"
         android:id="@+id/listMeal"
          />
 

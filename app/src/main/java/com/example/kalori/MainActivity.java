@@ -87,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
         Double weight = userTable.getDbweight();
         double bki = weight / (Math.pow(height / 100, 2));
         String birthday = userTable.getDbbirthday();
-
         String newAge = getAge(birthday);
 
 
