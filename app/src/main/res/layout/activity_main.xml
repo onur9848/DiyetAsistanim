@@ -124,9 +124,46 @@
 
         </LinearLayout>
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="5dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#AF9200"
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:id="@+id/totalProtein"
+            android:paddingVertical="5dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#0277BD"
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:id="@+id/totalKarbonhidrat"
+            android:paddingVertical="5dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:background="#C62828"
+            android:paddingVertical="5dp"
+            android:id="@+id/totalfat"/>
+
+
+
+    </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:id="@+id/recyler_view_list"
+        android:onClick="clickAction"
         tools:listitem="@layout/meal"
         android:layout_height="match_parent">
     </androidx.recyclerview.widget.RecyclerView>

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:id="@+id/recyler_lineer_layout"
     android:tag="cards main container">
 
     <androidx.cardview.widget.CardView

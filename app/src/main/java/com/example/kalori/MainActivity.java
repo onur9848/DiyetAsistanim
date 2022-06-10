@@ -1,14 +1,9 @@
 package com.example.kalori;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.view.View;
-import android.view.inputmethod.InputMethod;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-import androidx.annotation.NonNull;
+import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,7 +15,6 @@ import com.example.kalori.adapter.MealAdapter;
 import com.example.kalori.realm.addMealTable;
 import com.example.kalori.realm.userTable;
 import io.realm.Realm;
-import io.realm.RealmResults;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -37,10 +31,13 @@ public class MainActivity extends AppCompatActivity {
     int userLog;
     Realm realm;
 
-    TextView name_surname, weight_height, age, abki,toplamKalori;
+    TextView name_surname, weight_height, age, abki;
+    TextView totalprotein, totalfat, totalkarbonhidrat, toplamKalori;
     Button istatistik, yeniogun, profil;
+    ImageView deleteimage;
     RecyclerView list_recycler;
-    LinearLayout mainPage ;
+    LinearLayout recycler_lineer;
+    MealAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,14 +50,15 @@ public class MainActivity extends AppCompatActivity {
         showList();
         setToplamKalori();
     }
+
+
     @Override
-    public void onResume()
-    {  setToplamKalori();
+    public void onResume() {
+
         super.onResume();
         showList();
         setToplamKalori();
     }
-
 
 
     public void realmTanimla() {
@@ -76,23 +74,34 @@ public class MainActivity extends AppCompatActivity {
         profil = (Button) findViewById(R.id.profil);
         yeniogun = (Button) findViewById(R.id.newmeal);
         list_recycler = (RecyclerView) findViewById(R.id.recyler_view_list);
-        mainPage = (LinearLayout) findViewById(R.id.mainpage);
+        recycler_lineer = (LinearLayout) findViewById(R.id.recyler_lineer_layout);
         toplamKalori = (TextView) findViewById(R.id.mainToplamKalori);
-
+        totalfat = (TextView) findViewById(R.id.totalfat);
+        totalkarbonhidrat = (TextView) findViewById(R.id.totalKarbonhidrat);
+        totalprotein = (TextView) findViewById(R.id.totalProtein);
+        deleteimage = (ImageView) findViewById(R.id.deleteproduct);
 
     }
-    public void clickAction(View view){
-        switch (view.getId()){
-            case R.id.statistics: showStatistics();
+
+    public void clickAction(View view) {
+        switch (view.getId()) {
+            case R.id.statistics:
+                showStatistics();
                 break;
-            case  R.id.profil: showProfil();
+            case R.id.profil:
+                showProfil();
                 break;
-            case R.id.newmeal: addNewMeal();
+
+            case R.id.newmeal:
+                addNewMeal();
+                break;
+            case R.id.recyler_view_list:
+                Toast.makeText(this, "deneme", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void showStatistics() {
-        Intent intent = new Intent(MainActivity.this,StatisticsActivity.class );
+        Intent intent = new Intent(MainActivity.this, StatisticsActivity.class);
         startActivity(intent);
     }
 
@@ -100,13 +109,13 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(MainActivity.this, ProfilActivity.class);
         startActivity(intent);
-        
+
     }
 
     private void addNewMeal() {
         Intent intent = new Intent(MainActivity.this, newMealActivity.class);
         startActivity(intent);
-        
+
     }
 
     public void kullanicibilgi() {
@@ -122,9 +131,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         Sname = name + " " + surname;
-        Sweight_height = "boy: " +height + " kilo: " + weight;
-        Sage = "Yaş: "+newAge;
-        Sbki ="bki: "+ Math.round(bki*100.0)/100.0;
+        Sweight_height = "boy: " + height + " kilo: " + weight;
+        Sage = "Yaş: " + newAge;
+        Sbki = "bki: " + Math.round(bki * 100.0) / 100.0;
         name_surname.setText(Sname);
         weight_height.setText(Sweight_height);
         age.setText(Sage);
@@ -134,10 +143,10 @@ public class MainActivity extends AppCompatActivity {
     private String getAge(String birthday) {
         String myFormat = "MM/dd/yyyy";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(myFormat, Locale.getDefault());
-        LocalDate dateTime = LocalDate.parse(birthday,formatter);
+        LocalDate dateTime = LocalDate.parse(birthday, formatter);
         LocalDate dateNow = LocalDate.now();
-        Period diff = Period.between(dateTime,dateNow);
-        return ""+diff.getYears();
+        Period diff = Period.between(dateTime, dateNow);
+        return "" + diff.getYears();
     }
 
     public void kontrol() {
@@ -151,18 +160,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void showList(){
-        Toast.makeText(this, "selam", Toast.LENGTH_SHORT).show();
+    public void showList() {
+//        Toast.makeText(this, "selam", Toast.LENGTH_SHORT).show();
         List<addMealTable> addMealTables = new ArrayList<addMealTable>(realm.where(addMealTable.class).findAll());
         List<addMealTable> addMealTablesToday = new ArrayList<addMealTable>();
-
-        addMealTablesToday=getTodayList(addMealTables);
-
-        MealAdapter adapter = new MealAdapter(addMealTablesToday,this );
+        addMealTablesToday = getTodayList(addMealTables);
+        adapter = new MealAdapter(addMealTablesToday, this);
         list_recycler.setAdapter(adapter);
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         list_recycler.setLayoutManager(linearLayoutManager);
+
     }
 
 
@@ -170,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
         List<addMealTable> newList = new ArrayList<>();
         Date today = Date.from(Instant.now());
 
-        for(int i = 0; i< addMealTables.size(); i++){
+        for (int i = 0; i < addMealTables.size(); i++) {
             Date itemDay = addMealTables.get(i).getDay();
             if (itemDay.getDay() == today.getDay() && itemDay.getMonth() == today.getMonth() && itemDay.getYear() == today.getYear())
                 newList.add(addMealTables.get(i));
@@ -180,15 +189,33 @@ public class MainActivity extends AppCompatActivity {
 
         return newList;
     }
-    public void setToplamKalori(){
+
+    @SuppressLint("SetTextI18n")
+    public void setToplamKalori() {
         List<addMealTable> addMealTables = new ArrayList<addMealTable>(realm.where(addMealTable.class).findAll());
         List<addMealTable> todayMealList = getTodayList(addMealTables);
-        double toplamKaloridouble = 0;
-        for (int i = 0 ;i<todayMealList.size();i++){
-            toplamKaloridouble = toplamKaloridouble +todayMealList.get(i).getCalorie();
+        double toplamKaloridouble = 0, toplamKarbonhidrat = 0, toplamYag = 0, toplamProtein = 0, yuzdeYag, yuzdeKarbon, yuzdeProtein;
+        for (int i = 0; i < todayMealList.size(); i++) {
+            toplamKaloridouble += +todayMealList.get(i).getCalorie();
+            toplamKarbonhidrat += todayMealList.get(i).getCarbonhydrat();
+            toplamYag += todayMealList.get(i).getFat();
+            toplamProtein += todayMealList.get(i).getProtein();
+
         }
-        toplamKalori.setText(toplamKaloridouble+"");
+        double totalValue = toplamKarbonhidrat + toplamProtein + toplamYag;
+        yuzdeKarbon = (toplamKarbonhidrat / totalValue) * 100;
+        yuzdeProtein = (toplamYag / totalValue) * 100;
+        yuzdeYag = (toplamYag / totalValue) * 100;
+
+        totalprotein.setText("Protein: %" + yuvarlama(yuzdeProtein) + "\n" + yuvarlama(toplamProtein) + "gram");
+        totalfat.setText("Yag: %" + yuvarlama(yuzdeYag) + "\n" + yuvarlama(toplamYag) + "gram");
+        totalkarbonhidrat.setText("Karbohidrat: %" + yuvarlama(yuzdeKarbon) + "\n" + yuvarlama(toplamKarbonhidrat) + "gram");
+        toplamKalori.setText(toplamKaloridouble + "");
     }
 
+    double yuvarlama(double sayi) {
+        sayi = Math.round(sayi * 100.0) / 100.0;
+        return sayi;
+    }
 
 }
