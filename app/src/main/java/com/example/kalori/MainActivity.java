@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     Button istatistik, yeniogun, profil;
     ImageView deleteimage;
     RecyclerView list_recycler;
-    LinearLayout recycler_lineer;
+    LinearLayout mainpage;
     MealAdapter adapter;
 
     @Override
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         profil = (Button) findViewById(R.id.profil);
         yeniogun = (Button) findViewById(R.id.newmeal);
         list_recycler = (RecyclerView) findViewById(R.id.recyler_view_list);
-        recycler_lineer = (LinearLayout) findViewById(R.id.recyler_lineer_layout);
+        mainpage = (LinearLayout) findViewById(R.id.mainpage);
         toplamKalori = (TextView) findViewById(R.id.mainToplamKalori);
         totalfat = (TextView) findViewById(R.id.totalfat);
         totalkarbonhidrat = (TextView) findViewById(R.id.totalKarbonhidrat);
@@ -95,8 +95,13 @@ public class MainActivity extends AppCompatActivity {
             case R.id.newmeal:
                 addNewMeal();
                 break;
-            case R.id.recyler_view_list:
-                Toast.makeText(this, "deneme", Toast.LENGTH_SHORT).show();
+            case  R.id.mainpage:
+                mainpage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        setToplamKalori();
+                    }
+                });
         }
     }
 
@@ -131,9 +136,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         Sname = name + " " + surname;
-        Sweight_height = "boy: " + height + " kilo: " + weight;
+        Sweight_height = "Boy: " + height + " Kilo: " + weight;
         Sage = "Yaş: " + newAge;
-        Sbki = "bki: " + Math.round(bki * 100.0) / 100.0;
+        Sbki = "Bki: " + Math.round(bki * 100.0) / 100.0;
         name_surname.setText(Sname);
         weight_height.setText(Sweight_height);
         age.setText(Sage);

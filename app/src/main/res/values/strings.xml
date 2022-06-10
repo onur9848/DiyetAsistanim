@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">kalori</string>
     <string name="login">Kayıt ol</string>
+    <string name="profile">Profile</string>
+    <string name="isim">Onur Enes Gündoğdu</string>
     <dimen name="meal_detail_size">22sp</dimen>
 </resources>

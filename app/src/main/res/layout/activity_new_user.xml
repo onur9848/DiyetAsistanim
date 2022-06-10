@@ -12,6 +12,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/profilEdittext"
         android:id="@+id/name"
         android:hint="isim"
         android:singleLine="true" />
@@ -21,11 +22,13 @@
         android:singleLine="true"
         android:id="@+id/surname"
         android:layout_height="wrap_content"
-        android:hint="soyisim" />
+        android:hint="soyisim"
+        style="@style/profilEdittext"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/profilEdittext"
         android:singleLine="true"
         android:id="@+id/height"
         android:inputType="number"
@@ -34,6 +37,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/profilEdittext"
         android:singleLine="true"
         android:id="@+id/weight"
         android:inputType="number"
@@ -42,6 +46,7 @@
     <EditText
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        style="@style/profilEdittext"
         android:id="@+id/birthday"
         android:clickable="false"
         android:cursorVisible="false"

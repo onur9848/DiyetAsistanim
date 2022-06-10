@@ -13,4 +13,16 @@
         <item name="android:statusBarColor" tools:targetApi="l">#B5333131</item>
         <!-- Customize your theme here. -->
     </style>
+    <style name="profilEdittext">
+        <item name="android:textColor">#8F2403</item>
+        <item name="android:background">@color/black</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:radius">3dp</item>
+
+
+
+
+    </style>
 </resources>

@@ -11,12 +11,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.example.kalori.realm.userTable;
+import com.example.kalori.realm.weightHistory;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class newUser extends AppCompatActivity {
@@ -116,13 +119,17 @@ public class newUser extends AppCompatActivity {
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
+                Date datenow = Date.from(Instant.now());
                 userTable userTable = realm.createObject(com.example.kalori.realm.userTable.class);
+                weightHistory weightHistory = realm.createObject(com.example.kalori.realm.weightHistory.class);
                 userTable.setUser(users);
                 userTable.setDbname(names);
                 userTable.setDbsurname(surnames);
                 userTable.setDbheight(heights);
                 userTable.setDbweight(weights);
                 userTable.setDbbirthday(birthdays);
+                weightHistory.setWeight(weights);
+                weightHistory.setDate(datenow);
 
             }
         }, new Realm.Transaction.OnSuccess() {
