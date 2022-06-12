@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:layout_margin="15dp"
     android:gravity="center_horizontal"
-    tools:context=".newUser">
+    tools:context=".activity.newUser">
 
     <EditText
         android:layout_width="match_parent"
@@ -23,7 +23,7 @@
         android:id="@+id/surname"
         android:layout_height="wrap_content"
         android:hint="soyisim"
-        style="@style/profilEdittext"/>
+        style="@style/profilEdittext" />
 
     <EditText
         android:layout_width="match_parent"
@@ -54,13 +54,39 @@
         android:focusableInTouchMode="false"
         android:hint="Doğum Tarihi" />
 
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:id="@+id/sexRadioButtonUser"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:id="@+id/newErkekRadio"
+            android:layout_marginHorizontal="20sp"
+            android:text="Erkek" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:id="@+id/newKadinRadio"
+            android:layout_marginHorizontal="20sp"
+            android:text="Kadin" />
+    </RadioGroup>
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="20sp"
+        android:paddingVertical="10dp"
+        android:paddingHorizontal="20sp"
+        android:textSize="18sp"
         android:id="@+id/login"
-        android:text="@string/login"
-        />
-
+        android:text="@string/login" />
 
 
 </LinearLayout>

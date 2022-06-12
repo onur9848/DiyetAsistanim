@@ -26,7 +26,7 @@
             android:name=".activity.newMealActivity"
             android:exported="true" />
         <activity
-            android:name=".newUser"
+            android:name=".activity.newUser"
             android:exported="true" />
         <activity
             android:name=".MainActivity"

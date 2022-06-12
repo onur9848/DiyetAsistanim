@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.kalori.activity.ProfilActivity;
 import com.example.kalori.activity.StatisticsActivity;
 import com.example.kalori.activity.newMealActivity;
+import com.example.kalori.activity.newUser;
 import com.example.kalori.adapter.MealAdapter;
 import com.example.kalori.realm.addMealTable;
 import com.example.kalori.realm.userTable;
@@ -28,7 +29,7 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    int userLog;
+
     Realm realm;
 
     TextView name_surname, weight_height, age, abki;
@@ -45,10 +46,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         realmTanimla();
         tanimla();
-        kontrol();
-        kullanicibilgi();
-        showList();
-        setToplamKalori();
+        int userLog = realm.where(userTable.class).findAll().size();
+        if (userLog == 0) {
+            Intent intent = new Intent(getApplicationContext(), newUser.class);
+            startActivity(intent);
+            finish();
+        } else {
+            kullanicibilgi();
+            showList();
+            setToplamKalori();
+        }
     }
 
 
@@ -95,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.newmeal:
                 addNewMeal();
                 break;
-            case  R.id.mainpage:
+            case R.id.mainpage:
                 mainpage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -154,16 +161,6 @@ public class MainActivity extends AppCompatActivity {
         return "" + diff.getYears();
     }
 
-    public void kontrol() {
-
-        userLog = realm.where(userTable.class).findAll().size();
-
-        if (userLog == 0) {
-            Intent intent = new Intent(MainActivity.this, newUser.class);
-            startActivity(intent);
-            finish();
-        }
-    }
 
     public void showList() {
 //        Toast.makeText(this, "selam", Toast.LENGTH_SHORT).show();

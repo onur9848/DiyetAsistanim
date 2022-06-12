@@ -9,6 +9,8 @@ public class userTable extends RealmObject {
     private double dbheight;
     private double dbweight;
     private String dbbirthday;
+    private String dbcinsiyet;
+
 
     public Boolean getUser() {
         return user;
@@ -59,4 +61,11 @@ public class userTable extends RealmObject {
     }
 
 
+    public String getDbcinsiyet() {
+        return dbcinsiyet;
+    }
+
+    public void setDbcinsiyet(String dbcinsiyet) {
+        this.dbcinsiyet = dbcinsiyet;
+    }
 }

@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.example.kalori.R;
 import com.example.kalori.realm.addMealTable;
+import com.example.kalori.realm.dailyMacroDetailTable;
 import io.realm.Realm;
 
 import java.time.Instant;
@@ -102,6 +103,8 @@ public class MealDetailActivity extends AppCompatActivity {
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
+                double totalcalorie = 0 , totalprotein=0,totalcarbonhydrat=0,totalfat=0;
+                Date date = Date.from(Instant.now());
                 addMealTable addMealTable = realm.createObject(com.example.kalori.realm.addMealTable.class);
                 addMealTable.setDay(today);
                 addMealTable.setMealName(addMealName);
@@ -110,8 +113,6 @@ public class MealDetailActivity extends AppCompatActivity {
                 addMealTable.setProtein(addprotein);
                 addMealTable.setFat(addfat);
                 addMealTable.setCalorie(addcalorie);
-
-
             }
         }, new Realm.Transaction.OnSuccess() {
             @Override

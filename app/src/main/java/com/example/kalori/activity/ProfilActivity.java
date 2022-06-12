@@ -1,16 +1,13 @@
 package com.example.kalori.activity;
 
 import android.app.Dialog;
-import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import com.example.kalori.MainActivity;
 import com.example.kalori.R;
-import com.example.kalori.newUser;
 import com.example.kalori.realm.userTable;
 import com.example.kalori.realm.weightHistory;
 import io.realm.Realm;
@@ -20,7 +17,7 @@ import java.util.Date;
 
 public class ProfilActivity extends AppCompatActivity {
 
-    TextView profilisimtext, profilboytext, profilkilotext, profilbkitext, profildogumtext, profilidealkilotext, dialogyenikilotext;
+    TextView profilisimtext, profilboytext, profilkilotext, profilbkitext, profildogumtext, profilidealkilotext, dialogyenikilotext, profilcinsiyettext;
     Button profilkilobuton, yenikilokaydet;
     Realm realm;
 
@@ -50,7 +47,9 @@ public class ProfilActivity extends AppCompatActivity {
         profilbkitext = (TextView) findViewById(R.id.profilbki);
         profildogumtext = (TextView) findViewById(R.id.profilDogumTarihi);
         profilidealkilotext = (TextView) findViewById(R.id.profilIdealKilo);
+        profilcinsiyettext = (TextView) findViewById(R.id.profilCinsiyet);
         profilkilobuton = (Button) findViewById(R.id.profilKiloDegis);
+
 
     }
 
@@ -58,7 +57,7 @@ public class ProfilActivity extends AppCompatActivity {
 
         userTable usertable = realm.where(userTable.class).findFirst();
         assert usertable != null;
-        String isim, boy, kilo, bki, dogum, idealkilo;
+        String isim, boy, kilo, bki, dogum, idealkilo,cinsiyet;
         double bkihesap = usertable.getDbweight() / (Math.pow(usertable.getDbheight() / 100, 2));
         double idealkilohesap = 50 + 2.3 * (usertable.getDbheight() / 2.54 - 60);
         isim = usertable.getDbname() + " " + usertable.getDbsurname();
@@ -67,12 +66,14 @@ public class ProfilActivity extends AppCompatActivity {
         bki = "BKI: " + yuvarlama(bkihesap);
         dogum = "Doğum Tarihiniz: " + usertable.getDbbirthday().toString();
         idealkilo = "İdeal Kilonuz: " + yuvarlama(idealkilohesap);
+        cinsiyet = "Cinsiyet: "+usertable.getDbcinsiyet();
         profilisimtext.setText(isim);
         profilboytext.setText(boy);
         profilkilotext.setText(kilo);
         profilbkitext.setText(bki);
         profildogumtext.setText(dogum);
         profilidealkilotext.setText(idealkilo);
+        profilcinsiyettext.setText(cinsiyet);
 
     }
 
@@ -106,19 +107,19 @@ public class ProfilActivity extends AppCompatActivity {
                 double yenikilo = Double.parseDouble(dialogyenikilotext.getText().toString());
                 userTable.setDbweight(yenikilo);
                 realm.commitTransaction();
-                kiloekle(yenikilo,datenow);
+                kiloekle(yenikilo, datenow);
                 doldur();
                 dialog.hide();
             }
         });
     }
 
-    public void kiloekle(double kilo,Date tarih){
+    public void kiloekle(double kilo, Date tarih) {
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
                 weightHistory weightHistory = realm.createObject(com.example.kalori.realm.weightHistory.class);
-                
+
                 weightHistory.setWeight(kilo);
                 weightHistory.setDate(tarih);
 
@@ -135,8 +136,8 @@ public class ProfilActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "hatali", Toast.LENGTH_SHORT).show();
             }
         });
-        
-        
+
+
     }
 
 }

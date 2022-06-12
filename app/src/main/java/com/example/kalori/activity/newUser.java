@@ -1,21 +1,17 @@
-package com.example.kalori;
+package com.example.kalori.activity;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.view.View;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import com.example.kalori.MainActivity;
+import com.example.kalori.R;
 import com.example.kalori.realm.userTable;
 import com.example.kalori.realm.weightHistory;
 import io.realm.Realm;
-import io.realm.RealmResults;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Calendar;
@@ -28,6 +24,8 @@ public class newUser extends AppCompatActivity {
     final Calendar myCalendar = Calendar.getInstance();
     EditText Name, Surname, Height, Weight, Birthday;
     Button loginButton;
+    RadioGroup cinsiyetRadioButton;
+    RadioButton selectedSex;
 
 
     @Override
@@ -43,6 +41,7 @@ public class newUser extends AppCompatActivity {
 
     public void islevler() {
         date();
+
 
     }
 
@@ -74,6 +73,7 @@ public class newUser extends AppCompatActivity {
         Weight = (EditText) findViewById(R.id.weight);
         Birthday = (EditText) findViewById(R.id.birthday);
         loginButton = (Button) findViewById(R.id.login);
+        cinsiyetRadioButton = (RadioGroup) findViewById(R.id.sexRadioButtonUser);
         realm = Realm.getDefaultInstance();
 
     }
@@ -90,14 +90,19 @@ public class newUser extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final boolean user = true;
-                final String name = Name.getText().toString();
-                final String surname = Surname.getText().toString();
-                final Double height = Double.parseDouble(Height.getText().toString());
-                final Double weight = Double.parseDouble(Weight.getText().toString());
-                final String birthday = Birthday.getText().toString();
-
-                loginset(user, name, surname, height, weight, birthday);
+                int selectId = cinsiyetRadioButton.getCheckedRadioButtonId();
+                selectedSex = findViewById(selectId);
+                if (checkFields()) {
+                    final boolean user = true;
+                    final String name = Name.getText().toString();
+                    final String surname = Surname.getText().toString();
+                    final Double height = Double.parseDouble(Height.getText().toString());
+                    final Double weight = Double.parseDouble(Weight.getText().toString());
+                    final String birthday = Birthday.getText().toString();
+                    final String cinsiyet = selectedSex.getText().toString();
+                    loginset(user, name, surname, height, weight, birthday, cinsiyet);
+                } else
+                    Toast.makeText(newUser.this, "Lütfen Tüm kısımları doldurunuz", Toast.LENGTH_SHORT).show();
 
 
             }
@@ -105,17 +110,29 @@ public class newUser extends AppCompatActivity {
     }
 
     public boolean checkFields() {
-        if (Name.getText().toString().length() > 0 &&
-                Surname.getText().toString().length() > 0 &&
-                Height.getText().toString().length() > 0 &&
-                Weight.getText().toString().length() > 0 &&
-                Birthday.getText().toString().length() > 0)
+        if (!Name.getText().toString().isEmpty() &&
+                !Surname.getText().toString().isEmpty() &&
+                !Height.getText().toString().isEmpty() &&
+                !Weight.getText().toString().isEmpty() &&
+                !Birthday.getText().toString().isEmpty() &&
+                cinsiyetRadioButton.getCheckedRadioButtonId() != -1) {
+            Toast.makeText(this, "true döndü", Toast.LENGTH_SHORT).show();
             return true;
-        else
+        } else {
+            Toast.makeText(this, "false döndü", Toast.LENGTH_SHORT).show();
             return false;
+        }
+//        String deneme = "Name: "+Name.getText().toString().isEmpty()+
+//                "\nsurname: "+ Surname.getText().toString().isEmpty()+
+//                "\nHeight: "+Height.getText().toString().isEmpty()+
+//                "\nWeight: "+Weight.getText().toString().isEmpty()+
+//                "\nbirdhday: "+Birthday.getText().toString().isEmpty()+
+//                "\nCinsiyet: "+cinsiyetRadioButton.isActivated();
+//        Toast.makeText(this, deneme, Toast.LENGTH_LONG).show();
+//        return false;
     }
 
-    private void loginset(final boolean users, final String names, final String surnames, final Double heights, final Double weights, final String birthdays) {
+    private void loginset(final boolean users, final String names, final String surnames, final Double heights, final Double weights, final String birthdays, final String cinsiyet) {
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -128,6 +145,7 @@ public class newUser extends AppCompatActivity {
                 userTable.setDbheight(heights);
                 userTable.setDbweight(weights);
                 userTable.setDbbirthday(birthdays);
+                userTable.setDbcinsiyet(cinsiyet);
                 weightHistory.setWeight(weights);
                 weightHistory.setDate(datenow);
 
