@@ -3,26 +3,24 @@ package com.example.kalori.activity;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
+import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 import com.example.kalori.R;
 import com.example.kalori.adapter.ViewPagerAdapter;
 import com.example.kalori.realm.addMealTable;
 import com.example.kalori.realm.dailyMacroDetailTable;
 import com.example.kalori.realm.weightHistory;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.*;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import io.realm.Realm;
-import io.realm.RealmObject;
 import io.realm.RealmResults;
 
 import java.text.SimpleDateFormat;
@@ -33,10 +31,20 @@ import java.util.List;
 
 public class StatisticsActivity extends AppCompatActivity {
 
-    ViewPager2 macroDetail,WeightDetail;
+    ViewPager2 macroDetail, calorieHistoryPager;
     Realm realm;
     SimpleDateFormat myFormat;
     LineChart mpLinechart;
+    Spinner dayofrange;
+    ArrayAdapter<String> dayofrangeAdapter;
+    List<String> spinnnerList;
+    List<dayCalorie> totalCalorieAday;
+    List<dayCalorie> totalCalorieAweek;
+    List<dayCalorie> totalCalorieAmonth;
+    BarChart barChart;
+    BarData barData;
+    BarDataSet barDataSet;
+    ArrayList barEntriesArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +55,76 @@ public class StatisticsActivity extends AppCompatActivity {
         doldurDailyMacro();
         setWeightHistorymp();
         kaloriKiyasla();
+        setSpinner();
+
+
+    }
+
+    private void barChartDoldur(int index) {
+
+
+
+        barChart = findViewById(R.id.barChart);
+        getBarEntries(index);
+        barChart.setDragEnabled(true);
+        barChart.setPinchZoom(false);
+        barChart.setDoubleTapToZoomEnabled(false);
+        YAxis leftAxis = barChart.getAxisLeft();
+
+        LimitLine ll = new LimitLine(2000f, "Alınması gereken kalori");
+        ll.setLineColor(Color.RED);
+        ll.setLineWidth(4f);
+        ll.setTextColor(Color.BLACK);
+        ll.setTextSize(12f);
+        leftAxis.addLimitLine(ll);
+
+        barDataSet = new BarDataSet(barEntriesArrayList, "Kalori Tablosu");
+        barData = new BarData(barDataSet);
+        barChart.setData(barData);
+//        barDataSet.setBarBorderWidth(10f);
+        barDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+        barDataSet.setValueTextColor(Color.BLACK);
+        barData.setBarWidth(0.55f);
+
+        barDataSet.setValueTextSize(16f);
+        barChart.getDescription().setEnabled(false);
+
+    }
+
+    private void getBarEntries(int index) {
+
+        List<dayCalorie> list = new ArrayList<dayCalorie>();
+        if (index == 0) {
+            list = totalCalorieAday;
+        } else if (index == 1) {
+            list = totalCalorieAweek;
+        } else {
+            list = totalCalorieAmonth;
+        }
+
+        barEntriesArrayList = new ArrayList<>();
+
+        for (int i = 0; i < list.size(); i++)
+            barEntriesArrayList.add(new BarEntry(i, (float) list.get(i).getCalorie()));
+
+    }
+
+    private void setSpinner() {
+        dayofrangeAdapter.setDropDownViewResource(R.layout.my_custom_spinner);
+        dayofrange.setAdapter(dayofrangeAdapter);
+
+        dayofrange.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int index, long l) {
+//                Toast.makeText(StatisticsActivity.this, "Seçilen item:" + adapterView.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
+                barChartDoldur(index);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
 
@@ -74,13 +152,6 @@ public class StatisticsActivity extends AppCompatActivity {
 
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(set1);
-//        myDay.add("pzt");
-//        myDay.add("salı");
-//        myDay.add("çrşm");
-//        myDay.add("prşmb");
-//        myDay.add("cuma");
-//        myDay.add("cmrts");
-//        myDay.add("pzr");
 
         LineData data = new LineData(dataSets);
         mpLinechart.setData(data);
@@ -100,7 +171,9 @@ public class StatisticsActivity extends AppCompatActivity {
     private void listele() {
         List<dailyMacroDetailTable> dailyList = realm.where(dailyMacroDetailTable.class).findAll();
         macroDetail.setAdapter(new ViewPagerAdapter(this, dailyList, macroDetail));
+
     }
+
 
     @SuppressLint("SimpleDateFormat")
     private void tanimla() {
@@ -108,6 +181,12 @@ public class StatisticsActivity extends AppCompatActivity {
         realm = Realm.getDefaultInstance();
         myFormat = new SimpleDateFormat("yyyy-MM-dd");
         mpLinechart = findViewById(R.id.mpChart);
+        dayofrange = findViewById(R.id.staticticsSpinnir);
+        spinnnerList = new ArrayList<String>();
+        spinnnerList.add("Günlük Kalori Tablosu");
+        spinnnerList.add("Haftalık Kalori Tablosu");
+        spinnnerList.add("Aylık Kalori Tablosu");
+        dayofrangeAdapter = new ArrayAdapter<String>(this, R.layout.my_custom_spinner, spinnnerList);
 
     }
 
@@ -262,51 +341,78 @@ public class StatisticsActivity extends AppCompatActivity {
     public void kaloriKiyasla() {
         Calendar mycal = Calendar.getInstance();
         RealmResults<dailyMacroDetailTable> tables = realm.where(dailyMacroDetailTable.class).findAll();
-        List<Double> totalCalorieAday = new ArrayList<Double>();
-        List<Double> totalCalorieAweek = new ArrayList<Double>();
-        List<Double> totalCalorieAmonth = new ArrayList<Double>();
+        totalCalorieAday = new ArrayList<dayCalorie>();
+        totalCalorieAweek = new ArrayList<dayCalorie>();
+        totalCalorieAmonth = new ArrayList<dayCalorie>();
         List<Date> myDate = new ArrayList<Date>();
         //günlük
         for (dailyMacroDetailTable table : tables) {
+            dayCalorie item = new dayCalorie();
             myDate.add(table.getDate());
-            totalCalorieAday.add(table.getDbTotalCalorie());
-        }
+            item.setDayText(myFormat.format(table.getDate()));
+            item.setCalorie(table.getDbTotalCalorie());
+            totalCalorieAday.add(item);
+        }   // Day List
         List<Calendar> myCalenderList = new ArrayList<Calendar>();
         for (Date date : myDate) {
-            mycal.setTime(date);
-            myCalenderList.add(mycal);
+            Calendar newCal = Calendar.getInstance();
+            newCal.setTime(date);
+            myCalenderList.add(newCal);
         }
-        //haftalık
+
         int hafta, yil;
-//        for (int i=0 ;i<myCalenderList.size();i++){
-//            hafta = myCalenderList.get(i).get(Calendar.WEEK_OF_YEAR);
-//            yıl = myCalenderList.get(i).get(Calendar.YEAR);
-//            if ()
-//        }
         hafta = myCalenderList.get(0).get(Calendar.WEEK_OF_YEAR);
         yil = myCalenderList.get(0).get(Calendar.YEAR);
+        SimpleDateFormat listFormat = new SimpleDateFormat("MMMM/yyyy");
+
         double totalkaloriHaftalik = 0;
         for (int i = 0; i < myCalenderList.size(); ) {
+            dayCalorie item = new dayCalorie();
             if (hafta == myCalenderList.get(i).get(Calendar.WEEK_OF_YEAR) && yil == myCalenderList.get(i).get(Calendar.YEAR)) {
                 totalkaloriHaftalik += tables.get(i).getDbTotalCalorie();
                 i++;
             } else {
-                totalCalorieAweek.add(totalkaloriHaftalik);
+                item.setDayText(myCalenderList.get(i).get(Calendar.WEEK_OF_YEAR) + ".Hafta");
+                item.setCalorie(totalkaloriHaftalik);
+                totalCalorieAweek.add(item);
+                totalkaloriHaftalik = 0;
                 hafta = myCalenderList.get(i).get(Calendar.WEEK_OF_YEAR);
                 yil = myCalenderList.get(i).get(Calendar.YEAR);
 
             }
             if (i == myCalenderList.size()) {
-                totalCalorieAweek.add(totalkaloriHaftalik);
+                item.setDayText(myCalenderList.get(i - 1).get(Calendar.WEEK_OF_YEAR) + ".Hafta");
+                item.setCalorie(totalkaloriHaftalik);
+                totalCalorieAweek.add(item);
             }
-        }
-        yil = 51;
-
+        } // Week List
 
         //aylık
-
-
+        int ay;
+        ay = myCalenderList.get(0).get(Calendar.MONTH);
+        yil = myCalenderList.get(0).get(Calendar.YEAR);
+        double totalKaloriAylik = 0;
+        for (int i = 0; i < myCalenderList.size(); ) {
+            dayCalorie item = new dayCalorie();
+            if (ay == myCalenderList.get(i).get(Calendar.MONTH) && yil == myCalenderList.get(i).get(Calendar.YEAR)) {
+                totalKaloriAylik += tables.get(i).getDbTotalCalorie();
+                i++;
+            } else {
+                item.setDayText(listFormat.format(myCalenderList.get(i).getTime()));
+                item.setCalorie(totalkaloriHaftalik);
+                totalCalorieAmonth.add(item);
+                totalKaloriAylik = 0;
+                ay = myCalenderList.get(i).get(Calendar.MONTH);
+                yil = myCalenderList.get(i).get(Calendar.YEAR);
+            }
+            if (i == myCalenderList.size()) {
+                item.setDayText(listFormat.format(myCalenderList.get(i - 1).getTime()));
+                item.setCalorie(totalKaloriAylik);
+                totalCalorieAmonth.add(item);
+            }
+        }  // Month List
     }
 
 
 }
+

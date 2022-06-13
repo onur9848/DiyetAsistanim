@@ -7,25 +7,32 @@
     android:gravity="center_horizontal">
 
 
+    <androidx.viewpager2.widget.ViewPager2
+        android:layout_width="match_parent"
+        android:layout_height="275dp"
+        android:background="#115544"
+        android:id="@+id/staticticsmakrodetails"
+        tools:listitem="@layout/makrodetails" />
 
-            <androidx.viewpager2.widget.ViewPager2
-                android:layout_width="match_parent"
-                android:layout_height="275dp"
-                android:background="#115544"
-                android:id="@+id/staticticsmakrodetails"
-                tools:listitem="@layout/makrodetails" />
+    <com.github.mikephil.charting.charts.LineChart
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@color/carbonhydratcolor"
+        android:id="@+id/mpChart" />
 
-            <com.github.mikephil.charting.charts.LineChart
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:background="@color/carbonhydratcolor"
-                android:id="@+id/mpChart" />
-
-    <Button
-        android:layout_width="wrap_content"
+    <Spinner
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="sil"
-        android:id="@+id/realmsil"/>
+        android:gravity="center"
+        android:scrollbarSize="35dp"
+        tools:listitem="@layout/my_custom_spinner"
+        android:id="@+id/staticticsSpinnir"/>
+
+    <com.github.mikephil.charting.charts.BarChart
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="#00B0FF"
+        android:id="@+id/barChart"/>
 
 </LinearLayout>
 
