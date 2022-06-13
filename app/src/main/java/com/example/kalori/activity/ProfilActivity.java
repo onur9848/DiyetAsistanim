@@ -1,10 +1,10 @@
 package com.example.kalori.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.graphics.Color;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.example.kalori.R;
@@ -18,8 +18,12 @@ import java.util.Date;
 public class ProfilActivity extends AppCompatActivity {
 
     TextView profilisimtext, profilboytext, profilkilotext, profilbkitext, profildogumtext, profilidealkilotext, dialogyenikilotext, profilcinsiyettext;
+    TextView profilkiyaslamatext;
     Button profilkilobuton, yenikilokaydet;
+    RadioGroup radioGroup;
     Realm realm;
+    String isim_text, boy_text, kilo_text, bki_text, dogum_text, idealkilo_text, cinsiyet_text;
+    double boy_double, kilo_double, bki_double, idealkilo_double;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +32,28 @@ public class ProfilActivity extends AppCompatActivity {
         tanimla();
         doldur();
         changeWeight();
+        kiyaslama();
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void kiyaslama() {
+        if (idealkilo_double-2 >kilo_double) {
+            profilkiyaslamatext.setText("İdeal kilonuzun Altındasınız.");
+            profilkiyaslamatext.setBackgroundColor(Color.BLUE);
+            profilkiyaslamatext.setTextColor(Color.YELLOW);
+        }
+        else if (idealkilo_double+2>kilo_double && kilo_double>idealkilo_double-2){
+            profilkiyaslamatext.setText("Tebrikler ideal kilonuzdasınız.");
+            profilkiyaslamatext.setBackgroundColor(Color.GREEN);
+            profilkiyaslamatext.setTextColor(Color.RED);
+
+        }
+        else {
+            profilkiyaslamatext.setText("İdeal kilonuzun üstündesiniz.");
+            profilkiyaslamatext.setBackgroundColor(Color.RED);
+            profilkiyaslamatext.setTextColor(Color.BLACK);
+        }
 
     }
 
@@ -49,6 +75,8 @@ public class ProfilActivity extends AppCompatActivity {
         profilidealkilotext = (TextView) findViewById(R.id.profilIdealKilo);
         profilcinsiyettext = (TextView) findViewById(R.id.profilCinsiyet);
         profilkilobuton = (Button) findViewById(R.id.profilKiloDegis);
+        radioGroup = findViewById(R.id.sexRadioButtonUser);
+        profilkiyaslamatext = findViewById(R.id.profilkıyaslamaText);
 
 
     }
@@ -57,24 +85,38 @@ public class ProfilActivity extends AppCompatActivity {
 
         userTable usertable = realm.where(userTable.class).findFirst();
         assert usertable != null;
-        String isim, boy, kilo, bki, dogum, idealkilo,cinsiyet;
-        double bkihesap = usertable.getDbweight() / (Math.pow(usertable.getDbheight() / 100, 2));
-        double idealkilohesap = 50 + 2.3 * (usertable.getDbheight() / 2.54 - 60);
-        isim = usertable.getDbname() + " " + usertable.getDbsurname();
-        boy = "Boyunuz: " + usertable.getDbheight();
-        kilo = "Kilonuz: " + usertable.getDbweight();
-        bki = "BKI: " + yuvarlama(bkihesap);
-        dogum = "Doğum Tarihiniz: " + usertable.getDbbirthday().toString();
-        idealkilo = "İdeal Kilonuz: " + yuvarlama(idealkilohesap);
-        cinsiyet = "Cinsiyet: "+usertable.getDbcinsiyet();
-        profilisimtext.setText(isim);
-        profilboytext.setText(boy);
-        profilkilotext.setText(kilo);
-        profilbkitext.setText(bki);
-        profildogumtext.setText(dogum);
-        profilidealkilotext.setText(idealkilo);
-        profilcinsiyettext.setText(cinsiyet);
+        boy_double = usertable.getDbheight();
+        kilo_double = usertable.getDbweight();
+        bki_double = usertable.getDbweight() / (Math.pow(usertable.getDbheight() / 100, 2));
+        idealkilo_double = idealkilohesaplama(usertable.getDbheight(), usertable.getDbcinsiyet());
 
+        isim_text = usertable.getDbname() + " " + usertable.getDbsurname();
+        boy_text = "Boyunuz: " + boy_double;
+        kilo_text = "Kilonuz: " + kilo_double;
+        bki_text = "BKI: " + yuvarlama(bki_double);
+        dogum_text = "Doğum Tarihiniz: " + usertable.getDbbirthday().toString();
+        idealkilo_text = "İdeal Kilonuz: " + yuvarlama(idealkilo_double);
+        cinsiyet_text = "Cinsiyet: " + usertable.getDbcinsiyet();
+
+        profilisimtext.setText(isim_text);
+        profilboytext.setText(boy_text);
+        profilkilotext.setText(kilo_text);
+        profilbkitext.setText(bki_text);
+        profildogumtext.setText(dogum_text);
+        profilidealkilotext.setText(idealkilo_text);
+        profilcinsiyettext.setText(cinsiyet_text);
+
+    }
+
+    double idealkilohesaplama(double boy, String cinsiyet) {
+        double ideal;
+        String bool = "Erkek";
+        if (bool.equals(cinsiyet))
+            ideal = 50 + 2.3 * ((boy / 2.54) - 60);
+        else
+            ideal = 45.5 + 2.3 * ((boy / 2.54) - 60);
+
+        return ideal;
     }
 
     double yuvarlama(double sayi) {
@@ -87,6 +129,7 @@ public class ProfilActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 showDialog();
+
             }
         });
 
@@ -109,6 +152,7 @@ public class ProfilActivity extends AppCompatActivity {
                 realm.commitTransaction();
                 kiloekle(yenikilo, datenow);
                 doldur();
+                kiyaslama();
                 dialog.hide();
             }
         });

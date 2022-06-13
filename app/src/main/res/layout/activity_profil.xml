@@ -91,6 +91,14 @@
         android:id="@+id/profilIdealKilo"
         style="@style/profilEdittext" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ideal Kilo"
+        android:id="@+id/profilkıyaslamaText"
+        style="@style/profilEdittext" />
+
+
 
 </LinearLayout>
 

@@ -13,7 +13,6 @@ public class kaloriApp extends Application {
         super.onCreate();
         Realm.init(this);
         RealmConfiguration config =new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build();
-
         Realm.setDefaultConfiguration(config);
     }
 }

@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 import com.example.kalori.R;
 import com.example.kalori.adapter.ViewPagerAdapter;
@@ -14,7 +15,6 @@ import com.example.kalori.realm.addMealTable;
 import com.example.kalori.realm.dailyMacroDetailTable;
 import com.example.kalori.realm.weightHistory;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -22,17 +22,18 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import io.realm.Realm;
+import io.realm.RealmObject;
 import io.realm.RealmResults;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public class StatisticsActivity extends AppCompatActivity {
 
-    ViewPager2 macroDetail;
+    ViewPager2 macroDetail,WeightDetail;
     Realm realm;
     SimpleDateFormat myFormat;
     LineChart mpLinechart;
@@ -45,38 +46,27 @@ public class StatisticsActivity extends AppCompatActivity {
         listele();
         doldurDailyMacro();
         setWeightHistorymp();
-        butondeneme();
-
+        kaloriKiyasla();
     }
 
-    private void butondeneme() {
-        Button button = findViewById(R.id.denemebuton);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(StatisticsActivity.this, "tıkla", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
     private void setWeightHistorymp() {
-        List<Integer> tarih_modelList= new ArrayList<>();
-        ArrayList<Entry> myEntry =new ArrayList<>();//yd_degeri
+        ArrayList<Entry> myEntry = new ArrayList<>();//yd_degeri
         List<String> myDay = new ArrayList<>();//gunle
         mpLinechart.setDragEnabled(true);
         mpLinechart.setScaleEnabled(false);
 
         YAxis leftAxis = mpLinechart.getAxisLeft();
         leftAxis.removeAllLimitLines();
-        leftAxis.enableGridDashedLine(10f,10f,0f);
+        leftAxis.enableGridDashedLine(10f, 10f, 0f);
         leftAxis.setDrawLimitLinesBehindData(true);
         mpLinechart.getAxisRight().setEnabled(false);
-        RealmResults<weightHistory> weightHistories=realm.where(weightHistory.class).findAll();
-        for (int i =0; i<weightHistories.size();i++){
-            myEntry.add(new Entry(i,(float) weightHistories.get(i).getWeight()));
+        RealmResults<weightHistory> weightHistories = realm.where(weightHistory.class).findAll();
+        for (int i = 0; i < weightHistories.size(); i++) {
+            myEntry.add(new Entry(i, (float) weightHistories.get(i).getWeight()));
             myDay.add(myFormat.format(weightHistories.get(i).getDate()));
         }
-        LineDataSet set1 = new LineDataSet(myEntry,"Kilo Grafiği");
+        LineDataSet set1 = new LineDataSet(myEntry, "Kilo Grafiği");
         set1.setFillAlpha(110);
         set1.setColor(Color.RED);
         set1.setLineWidth(3f);
@@ -94,9 +84,10 @@ public class StatisticsActivity extends AppCompatActivity {
 
         LineData data = new LineData(dataSets);
         mpLinechart.setData(data);
-        mpLinechart.setVisibleXRangeMaximum(7);
+        mpLinechart.setVisibleXRangeMaximum(5);
         mpLinechart.setGridBackgroundColor(Color.BLACK);
         mpLinechart.setDragEnabled(true);
+
         XAxis axis = mpLinechart.getXAxis();
         axis.setValueFormatter(new myAxisValueFormat(myDay));
         axis.setGranularity(1);
@@ -104,7 +95,6 @@ public class StatisticsActivity extends AppCompatActivity {
         axis.setPosition(XAxis.XAxisPosition.BOTTOM);
 
     }
-
 
 
     private void listele() {
@@ -116,93 +106,136 @@ public class StatisticsActivity extends AppCompatActivity {
     private void tanimla() {
         macroDetail = (ViewPager2) findViewById(R.id.staticticsmakrodetails);
         realm = Realm.getDefaultInstance();
-        myFormat = new SimpleDateFormat("dd/MM/yyyy");
+        myFormat = new SimpleDateFormat("yyyy-MM-dd");
         mpLinechart = findViewById(R.id.mpChart);
+
     }
 
     public void doldurDailyMacro() {
         int a = 0;
         RealmResults<addMealTable> addMealTable = realm.where(com.example.kalori.realm.addMealTable.class).findAll();
         if (!addMealTable.isEmpty()) {
-            listeledaily(addMealTable, a);
+            dailyMacroDetailTable(addMealTable);
         }
-        int lastpage= macroDetail.getChildCount();
+        int lastpage = realm.where(dailyMacroDetailTable.class).findAll().size() - 1;
         macroDetail.setCurrentItem(lastpage);
     }
 
-    public void listeledaily(RealmResults<addMealTable> addMealTable, int a) {
-        Date date = addMealTable.get(a).getDay();
-        String listDate = myFormat.format(date), realmDate;
+    public void dailyMacroDetailTable(RealmResults<addMealTable> realmResults) {
 
+        RealmResults<dailyMacroDetailTable> newTable;
+        Date addmealDate = realmResults.first().getDay();
+        Date newDate = null;
+        String addmealFormatDate = myFormat.format(addmealDate);
+        String realmResultFormat;
         double totalcalorie = 0, totalprotein = 0, totalfat = 0, totalcarbonhydrat = 0;
-        for (int i = a; i < addMealTable.size(); i++) {
-            realmDate = myFormat.format(addMealTable.get(i).getDay());
-            a = i;
-            if (realmDate.equals(listDate)) {
-                totalcalorie += addMealTable.get(i).getCalorie();
-                totalcarbonhydrat += addMealTable.get(i).getCarbonhydrat();
-                totalfat += addMealTable.get(i).getFat();
-                totalprotein += addMealTable.get(i).getProtein();
 
+
+        for (int i = 0; i < realmResults.size(); ) {
+            realmResultFormat = myFormat.format(realmResults.get(i).getDay());
+            dailyMacroDetailTable dailyMacro = new dailyMacroDetailTable();
+            if (addmealFormatDate.equals(realmResultFormat)) {
+                newDate = realmResults.get(i).getDay();
+                totalcalorie += realmResults.get(i).getCalorie();
+                totalcarbonhydrat += realmResults.get(i).getCarbonhydrat();
+                totalfat += realmResults.get(i).getFat();
+                totalprotein += realmResults.get(i).getProtein();
+                i++;
             } else {
 
-                date = addMealTable.get(i).getDay();
-                listDate = myFormat.format(date);
 
+                dailyMacro.setDate(newDate);
+                dailyMacro.setDbTotalCalorie(totalcalorie);
+                dailyMacro.setDbTotalCarbonhydrat(totalcarbonhydrat);
+                dailyMacro.setDbTotalFat(totalfat);
+                dailyMacro.setDbTotalProtein(totalprotein);
+                checkTable(dailyMacro);
+                newDate = realmResults.get(i).getDay();
+                totalcalorie = 0;
+                totalprotein = 0;
+                totalfat = 0;
+                totalcarbonhydrat = 0;
+                addmealFormatDate = myFormat.format(newDate);
+            }
+            if (i == realmResults.size()) {
+                dailyMacro.setDate(newDate);
+                dailyMacro.setDbTotalCalorie(totalcalorie);
+                dailyMacro.setDbTotalCarbonhydrat(totalcarbonhydrat);
+                dailyMacro.setDbTotalFat(totalfat);
+                dailyMacro.setDbTotalProtein(totalprotein);
+                checkTable(dailyMacro);
             }
         }
 
-        if (checkTable(date, totalcalorie, totalcarbonhydrat, totalfat, totalprotein)) {
-            setDailyMacroDetailTable(date, totalcalorie, totalcarbonhydrat, totalfat, totalprotein);
-        }
-        if (!addMealTable.last().equals(addMealTable.get(a))) {
-            listeledaily(addMealTable, a);
-        }
     }
 
-    public Boolean checkTable(Date date, double totalcalorie, double totalcarbonhydrat, double totalfat,
-                              double totalprotein) {
-        RealmResults<dailyMacroDetailTable> dailyMacroDetailTables = realm.where(dailyMacroDetailTable.class).findAll();
-        if (dailyMacroDetailTables.isEmpty())
-            return true;
-        else {
-            String lastDate = myFormat.format(dailyMacroDetailTables.last().getDate());
-            String indexDate = myFormat.format(date);
-            double lastcalorie = dailyMacroDetailTables.last().getDbTotalCalorie();
-            if (indexDate.equals(lastDate)) {
-                if (totalcalorie == lastcalorie) {
-                    return false;
-                } else
-                    updateDailyMacroDetailTable(date, totalcalorie, totalcarbonhydrat, totalfat, totalprotein);
-                return false;
-            } else
-                return true;
-        }
-    }
-
-    public void updateDailyMacroDetailTable(Date date, double totalcalorie, double totalcarbonhydrat, double totalfat,
-                                            double totalprotein) {
-        RealmResults<dailyMacroDetailTable> dailyMacroDetailTables = realm.where(dailyMacroDetailTable.class).findAll();
+    private void deleteAllDailyMealTable() {
+        RealmResults<dailyMacroDetailTable> table = realm.where(dailyMacroDetailTable.class).findAll();
         realm.beginTransaction();
-        dailyMacroDetailTables.last().setDbTotalCalorie(yuvarlama(totalcalorie));
-        dailyMacroDetailTables.last().setDbTotalProtein(yuvarlama(totalprotein));
-        dailyMacroDetailTables.last().setDbTotalCarbonhydrat(yuvarlama(totalcarbonhydrat));
-        dailyMacroDetailTables.last().setDbTotalFat(yuvarlama(totalfat));
+        for (dailyMacroDetailTable tables : table) {
+            tables.deleteFromRealm();
+
+        }
         realm.commitTransaction();
+    }
+
+    public void checkTable(dailyMacroDetailTable newObject) {
+        RealmResults<dailyMacroDetailTable> dailyMacroDetailTables = realm.where(dailyMacroDetailTable.class).findAll();
+        if (!dailyMacroDetailTables.isEmpty()) {
+            Date lastDate = dailyMacroDetailTables.last().getDate();
+            Date itemDate = newObject.getDate();
+            String lastDateFormat, itemDateformat;
+            lastDateFormat = myFormat.format(lastDate);
+            itemDateformat = myFormat.format(itemDate);
+            if (lastDateFormat.equals(itemDateformat)) {
+                if (dailyMacroDetailTables.last().getDbTotalCalorie() != newObject.getDbTotalCalorie()) {
+                    updateDailyMacroDetailTable(newObject);
+                }
+            } else if (lastDateFormat.compareTo(itemDateformat) < 0) {
+                setDailyMacroDetailTable(newObject);
+            } else {
+                updateDailyMacroDetailTable(newObject);
+            }
+        } else {
+            setDailyMacroDetailTable(newObject);
+        }
+
 
     }
 
-    public void setDailyMacroDetailTable(Date date, double totalcalorie, double totalcarbonhydrat, double totalfat,
-                                         double totalprotein) {
+    public void updateDailyMacroDetailTable(dailyMacroDetailTable newObject) {
+        RealmResults<dailyMacroDetailTable> dailyMacroDetailTables = realm.where(dailyMacroDetailTable.class).findAll();
+        List<Boolean> bool = new ArrayList<Boolean>();
+        int index;
+        String dailyTableFormat, newobjectformat;
+        newobjectformat = myFormat.format(newObject.getDate());
+        for (dailyMacroDetailTable table : dailyMacroDetailTables) {
+            dailyTableFormat = myFormat.format(table.getDate());
+            bool.add(newobjectformat.equals(dailyTableFormat));
+        }
+        index = bool.indexOf(true);
+
+
+        realm.beginTransaction();
+        dailyMacroDetailTables.get(index).setDbTotalCalorie(yuvarlama(newObject.getDbTotalCalorie()));
+        dailyMacroDetailTables.get(index).setDbTotalProtein(yuvarlama(newObject.getDbTotalProtein()));
+        dailyMacroDetailTables.get(index).setDbTotalCarbonhydrat(yuvarlama(newObject.getDbTotalCarbonhydrat()));
+        dailyMacroDetailTables.get(index).setDbTotalFat(yuvarlama(newObject.getDbTotalFat()));
+        realm.commitTransaction();
+        bool.clear();
+
+    }
+
+    public void setDailyMacroDetailTable(dailyMacroDetailTable newobject) {
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
                 dailyMacroDetailTable dailyMacroDetailTable = realm.createObject(com.example.kalori.realm.dailyMacroDetailTable.class);
-                dailyMacroDetailTable.setDate(date);
-                dailyMacroDetailTable.setDbTotalCalorie(yuvarlama(totalcalorie));
-                dailyMacroDetailTable.setDbTotalCarbonhydrat(yuvarlama(totalcarbonhydrat));
-                dailyMacroDetailTable.setDbTotalFat(yuvarlama(totalfat));
-                dailyMacroDetailTable.setDbTotalProtein(yuvarlama(totalprotein));
+                dailyMacroDetailTable.setDate(newobject.getDate());
+                dailyMacroDetailTable.setDbTotalCalorie(yuvarlama(newobject.getDbTotalCalorie()));
+                dailyMacroDetailTable.setDbTotalCarbonhydrat(yuvarlama(newobject.getDbTotalCarbonhydrat()));
+                dailyMacroDetailTable.setDbTotalFat(yuvarlama(newobject.getDbTotalFat()));
+                dailyMacroDetailTable.setDbTotalProtein(yuvarlama(newobject.getDbTotalProtein()));
 
             }
         }, new Realm.Transaction.OnSuccess() {
@@ -214,7 +247,7 @@ public class StatisticsActivity extends AppCompatActivity {
         }, new Realm.Transaction.OnError() {
             @Override
             public void onError(Throwable error) {
-                Toast.makeText(getApplicationContext(), "hatali", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "hatali" + error, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -225,4 +258,55 @@ public class StatisticsActivity extends AppCompatActivity {
         sayi = Math.round(sayi * 100.0) / 100.0;
         return sayi;
     }
+
+    public void kaloriKiyasla() {
+        Calendar mycal = Calendar.getInstance();
+        RealmResults<dailyMacroDetailTable> tables = realm.where(dailyMacroDetailTable.class).findAll();
+        List<Double> totalCalorieAday = new ArrayList<Double>();
+        List<Double> totalCalorieAweek = new ArrayList<Double>();
+        List<Double> totalCalorieAmonth = new ArrayList<Double>();
+        List<Date> myDate = new ArrayList<Date>();
+        //günlük
+        for (dailyMacroDetailTable table : tables) {
+            myDate.add(table.getDate());
+            totalCalorieAday.add(table.getDbTotalCalorie());
+        }
+        List<Calendar> myCalenderList = new ArrayList<Calendar>();
+        for (Date date : myDate) {
+            mycal.setTime(date);
+            myCalenderList.add(mycal);
+        }
+        //haftalık
+        int hafta, yil;
+//        for (int i=0 ;i<myCalenderList.size();i++){
+//            hafta = myCalenderList.get(i).get(Calendar.WEEK_OF_YEAR);
+//            yıl = myCalenderList.get(i).get(Calendar.YEAR);
+//            if ()
+//        }
+        hafta = myCalenderList.get(0).get(Calendar.WEEK_OF_YEAR);
+        yil = myCalenderList.get(0).get(Calendar.YEAR);
+        double totalkaloriHaftalik = 0;
+        for (int i = 0; i < myCalenderList.size(); ) {
+            if (hafta == myCalenderList.get(i).get(Calendar.WEEK_OF_YEAR) && yil == myCalenderList.get(i).get(Calendar.YEAR)) {
+                totalkaloriHaftalik += tables.get(i).getDbTotalCalorie();
+                i++;
+            } else {
+                totalCalorieAweek.add(totalkaloriHaftalik);
+                hafta = myCalenderList.get(i).get(Calendar.WEEK_OF_YEAR);
+                yil = myCalenderList.get(i).get(Calendar.YEAR);
+
+            }
+            if (i == myCalenderList.size()) {
+                totalCalorieAweek.add(totalkaloriHaftalik);
+            }
+        }
+        yil = 51;
+
+
+        //aylık
+
+
+    }
+
+
 }
