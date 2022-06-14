@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@android:color/darker_gray"
+    android:background="#171717"
     android:id="@+id/mainpage"
     android:onClick="clickAction"
     android:orientation="vertical">
@@ -11,6 +11,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#484848"
         android:orientation="vertical">
 
 
@@ -22,26 +23,32 @@
 
             <ImageView
                 android:id="@+id/image"
+                android:backgroundTint="@color/carbonhydratcolor"
+                android:background="@drawable/baseline_account_circle_24"
                 android:layout_width="100dp"
                 android:layout_height="100dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="4"
+                android:layout_weight="7"
                 android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    style="@style/mainTextView"
                     android:id="@+id/name_surname"
                     android:textColor="@color/white"
                     android:textSize="18sp" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
                     android:id="@+id/height_weight"
+                    style="@style/mainTextView"
                     android:text="öylesine"
                     android:textColor="@color/white"
                     android:textSize="18sp" />
@@ -49,19 +56,23 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_weight="4"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
                         android:id="@+id/age"
+                        style="@style/mainTextView"
                         android:textColor="@color/white"
-                        android:layout_marginRight="3dp"
                         android:textSize="18sp" />
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        style="@style/mainTextView"
                         android:id="@+id/bki"
                         android:textColor="@color/white"
                         android:textSize="18sp" />
@@ -73,11 +84,11 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="4"
+                android:background="#484848"
+                android:layout_weight="8"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:background="#434141"
-                android:layout_margin="10dp">
+                android:padding="10dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -85,7 +96,7 @@
                     android:layout_weight="2"
                     android:textAlignment="center"
                     android:text="Toplam Alınan Kalori"
-                    android:textColor="#ff5c25"
+                    android:textColor="#FF6531"
                     android:textSize="18sp" />
 
                 <TextView
@@ -104,32 +115,32 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/purple_200"
+            android:background="@color/colorPrimary"
             android:gravity="center"
-            android:padding="10dp">
+            android:padding="5dp">
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="clickAction"
+                style="@style/CustomButon"
                 android:id="@+id/newmeal"
-                android:layout_marginStart="5dp"
                 android:text="Yeni Öğün" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="clickAction"
+                style="@style/CustomButon"
                 android:id="@+id/statistics"
-                android:layout_marginStart="5dp"
                 android:text="İstatislikler" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="clickAction"
+                style="@style/CustomButon"
                 android:id="@+id/profil"
-                android:layout_marginStart="5dp"
                 android:text="Profil" />
 
         </LinearLayout>
@@ -138,14 +149,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingVertical="5dp"
+        android:background="#169807"
+        android:paddingBottom="5dp"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="#AF9200"
+            android:background="@color/proteincolor"
             android:textSize="16sp"
             android:textAlignment="center"
             android:id="@+id/totalProtein"
@@ -155,7 +167,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="#0277BD"
+            android:background="@color/carbonhydratcolor"
             android:textSize="16sp"
             android:textAlignment="center"
             android:id="@+id/totalKarbonhidrat"
@@ -167,12 +179,36 @@
             android:layout_weight="1"
             android:textSize="16sp"
             android:textAlignment="center"
-            android:background="#C62828"
+            android:background="@color/fatcolor"
             android:paddingVertical="5dp"
             android:id="@+id/totalfat" />
 
 
     </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:progressDrawable="@drawable/my_custom_progresbar"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:id="@+id/waterBar"
+            android:max="100"
+            android:progress="50" />
+
+        <TextView
+            android:id="@+id/progrsBarText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignTop="@id/waterBar"
+            android:gravity="center"
+            android:text="Naber"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
@@ -180,6 +216,8 @@
         android:onClick="clickAction"
         tools:listitem="@layout/meal"
         android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
+
+
 
 
 </LinearLayout>

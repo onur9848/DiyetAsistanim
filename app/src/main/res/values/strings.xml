@@ -3,5 +3,6 @@
     <string name="login">Kayıt ol</string>
     <string name="profile">Profile</string>
     <string name="isim">Onur Enes Gündoğdu</string>
+    <string name="_1_bardak_su_200ml">1 Bardak su (200ml)</string>
     <dimen name="meal_detail_size">22sp</dimen>
 </resources>

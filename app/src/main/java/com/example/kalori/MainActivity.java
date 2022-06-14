@@ -1,7 +1,10 @@
 package com.example.kalori;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,9 +17,13 @@ import com.example.kalori.activity.newMealActivity;
 import com.example.kalori.activity.newUser;
 import com.example.kalori.adapter.MealAdapter;
 import com.example.kalori.realm.addMealTable;
+import com.example.kalori.realm.dailyWaterTable;
 import com.example.kalori.realm.userTable;
 import io.realm.Realm;
+import io.realm.RealmObject;
+import io.realm.RealmResults;
 
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Period;
@@ -32,13 +39,16 @@ public class MainActivity extends AppCompatActivity {
 
     Realm realm;
 
-    TextView name_surname, weight_height, age, abki;
+    TextView name_surname, weight_height, age, abki, suEkleText, progressBarText;
     TextView totalprotein, totalfat, totalkarbonhidrat, toplamKalori;
-    Button istatistik, yeniogun, profil;
+    Button istatistik, yeniogun, profil, suEkleButton;
+    ProgressBar dailyWaterBar;
     ImageView deleteimage;
     RecyclerView list_recycler;
     LinearLayout mainpage;
     MealAdapter adapter;
+    double gunlukSu;
+    SimpleDateFormat myFormat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
 
         super.onResume();
+        kullanicibilgi();
         showList();
         setToplamKalori();
     }
@@ -72,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
         realm = Realm.getDefaultInstance();
     }
 
+    @SuppressLint("SimpleDateFormat")
     public void tanimla() {
         name_surname = (TextView) findViewById(R.id.name_surname);
         weight_height = (TextView) findViewById(R.id.height_weight);
@@ -87,7 +99,9 @@ public class MainActivity extends AppCompatActivity {
         totalkarbonhidrat = (TextView) findViewById(R.id.totalKarbonhidrat);
         totalprotein = (TextView) findViewById(R.id.totalProtein);
         deleteimage = (ImageView) findViewById(R.id.deleteproduct);
-
+        dailyWaterBar = (ProgressBar) findViewById(R.id.waterBar);
+        myFormat = new SimpleDateFormat("dd/MM/yyyy");
+        progressBarText = (TextView) findViewById(R.id.progrsBarText);
     }
 
     public void clickAction(View view) {
@@ -140,6 +154,8 @@ public class MainActivity extends AppCompatActivity {
         double bki = weight / (Math.pow(height / 100, 2));
         String birthday = userTable.getDbbirthday();
         String newAge = getAge(birthday);
+        gunlukSu = weight * 0.035;
+        gunlukSu = yuvarlama(gunlukSu);
 
 
         Sname = name + " " + surname;
@@ -150,6 +166,154 @@ public class MainActivity extends AppCompatActivity {
         weight_height.setText(Sweight_height);
         age.setText(Sage);
         abki.setText(Sbki);
+        setGunlukSu();
+
+    }
+
+    private void setGunlukSu() {
+        setWaterStatusBar();
+        dailyWaterBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showAddWaterDialog();
+            }
+        });
+
+    }
+    @SuppressLint("SetTextI18n")
+    public void setWaterStatusBar(){
+        String text;
+        int proggresBarStatus=0;
+        double icilensu;
+        proggresBarStatus = getProggresBarStatus();
+        if (proggresBarStatus>100){
+            proggresBarStatus=100;
+            progressBarText.setText("Tebrikler günlük su içme hedefinizi tamamladınız.");
+        }
+        dailyWaterBar.setProgress(proggresBarStatus);
+    }
+
+    private int getProggresBarStatus() {
+        double icilensu;
+        String text;
+        int proggresBarStatus;
+        dailyWaterTable lastTable = realm.where(dailyWaterTable.class).findAll().last();
+        assert lastTable != null;
+        icilensu = lastTable.getDailyWater();
+        text =Double.toString(icilensu/1000)+" L/"+gunlukSu+" L";
+        progressBarText.setText(text);
+
+        proggresBarStatus= (int) Math.round(icilensu/gunlukSu/10);
+        return proggresBarStatus;
+    }
+
+    public void showAddWaterDialog() {
+
+
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.add_water_dialog);
+        suEkleText = (TextView) dialog.findViewById(R.id.suEkleText);
+        suEkleButton = (Button) dialog.findViewById(R.id.suEkleButton);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+        suEkleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                double icilensu;
+                icilensu = getWaterText(suEkleText);
+                dailyWaterTable dailyWaterTables = new dailyWaterTable();
+                dailyWaterTables.setDailyWater(icilensu);
+                dailyWaterTables.setDate(Date.from(Instant.now()));
+                setDailyWaterTable(dailyWaterTables);
+                dialog.hide();
+
+                int proggresBarStatus=0;
+                proggresBarStatus = getProggresBarStatus();
+                if (proggresBarStatus>100){
+                    proggresBarStatus=100;
+                    progressBarText.setText("Tebrikler günlük su içme hedefinizi tamamladınız.");
+                }
+
+                dailyWaterBar.setProgress(proggresBarStatus);
+
+            }
+        });
+
+
+    }
+
+    private double getWaterText(TextView waterText) {
+        String waterString = waterText.getText().toString();
+        if (waterString.isEmpty()) {
+            return 200;
+        } else {
+            return Double.parseDouble(waterString);
+        }
+
+
+    }
+
+
+    private void setDailyWaterTable(dailyWaterTable object) {
+        RealmResults<dailyWaterTable> dailyWaterTables = realm.where(dailyWaterTable.class).findAll();
+        if (dailyWaterTables.isEmpty()) {
+            addDailyWaterTable(object);
+        } else {
+            for (dailyWaterTable tables : dailyWaterTables) {
+                String objectDateFormat, tableDateFormat;
+                objectDateFormat = myFormat.format(object.getDate());
+                tableDateFormat = myFormat.format(tables.getDate());
+                if (objectDateFormat.equals(tableDateFormat)) {
+                    updateDailyWaterTable(object);
+
+                } else {
+                    addDailyWaterTable(object);
+                }
+
+            }
+        }
+    }
+
+    public void addDailyWaterTable(dailyWaterTable object) {
+        realm.executeTransactionAsync(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                dailyWaterTable dailyWaterTables = realm.createObject(dailyWaterTable.class);
+                dailyWaterTables.setDate(object.getDate());
+                dailyWaterTables.setDailyWater(object.getDailyWater());
+
+
+            }
+        }, new Realm.Transaction.OnSuccess() {
+            @Override
+            public void onSuccess() {
+
+            }
+        }, new Realm.Transaction.OnError() {
+            @Override
+            public void onError(Throwable error) {
+
+            }
+        });
+
+
+    }
+
+    public void updateDailyWaterTable(dailyWaterTable object) {
+        RealmResults<dailyWaterTable> dailyWaterTables = realm.where(dailyWaterTable.class).findAll();
+        String objectDateFormat, tableDateFormat;
+        objectDateFormat = myFormat.format(object.getDate());
+        for (int i = 0; i < dailyWaterTables.size(); i++) {
+            tableDateFormat = myFormat.format(dailyWaterTables.get(i).getDate());
+            if (objectDateFormat.equals(tableDateFormat)) {
+                realm.beginTransaction();
+                double newValue = 0;
+                newValue = dailyWaterTables.get(i).getDailyWater() + object.getDailyWater();
+                dailyWaterTables.get(i).setDate(object.getDate());
+                dailyWaterTables.get(i).setDailyWater(newValue);
+                realm.commitTransaction();
+            }
+        }
     }
 
     private String getAge(String birthday) {

@@ -3,18 +3,26 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/onur9/.gradle/caches/transforms-3/cb6472aeed1ee3e1eccfc54713ead940/transformed/appcompat-1.4.2/res/drawable/abc_btn_default_mtrl_shape.xml" value="0.1421875" />
         <entry key="..\:/Users/onur9/AppData/Local/Android/Sdk/platforms/android-31/data/res/layout/simple_spinner_item.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/onur9/IdeaProjects/kalori/app/src/main/res/drawable-hdpi/baseline_account_circle_24.xml" value="0.23333333333333334" />
         <entry key="..\:/Users/onur9/IdeaProjects/kalori/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.12916666666666668" />
         <entry key="..\:/Users/onur9/IdeaProjects/kalori/app/src/main/res/drawable/baseline_account_circle_24.xml" value="0.2703125" />
+        <entry key="..\:/Users/onur9/IdeaProjects/kalori/app/src/main/res/drawable/ic_add_box_black_24dp.xml" value="0.202734375" />
         <entry key="..\:/Users/onur9/IdeaProjects/kalori/app/src/main/res/drawable/ic_launcher_background.xml" value="0.12916666666666668" />
+        <entry key="..\:/Users/onur9/IdeaProjects/kalori/app/src/main/res/drawable/my_custom_button.xml" value="0.182421875" />
+        <entry key="..\:/Users/onur9/IdeaProjects/kalori/app/src/main/res/drawable/my_custom_progresbar.xml" value="0.152" />
+        <entry key="..\:/Users/onur9/IdeaProjects/kalori/app/src/main/res/drawable/my_custom_textview.xml" value="0.15416666666666667" />
+        <entry key="..\:/Users/onur9/IdeaProjects/kalori/app/src/main/res/drawable/my_lineearlayout.xml" value="0.15416666666666667" />
         <entry key="..\:/Users/onur9/IdeaProjects/kalori/app/src/main/res/drawable/profilcircle.xml" value="0.2703125" />
-        <entry key="..\:/Users/onur9/IdeaProjects/kalori/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/Users/onur9/IdeaProjects/kalori/app/src/main/res/drawable/textview.xml" value="0.1" />
+        <entry key="..\:/Users/onur9/IdeaProjects/kalori/app/src/main/res/layout/activity_main.xml" value="0.264" />
         <entry key="..\:/Users/onur9/IdeaProjects/kalori/app/src/main/res/layout/activity_meal_detail.xml" value="0.6" />
-        <entry key="..\:/Users/onur9/IdeaProjects/kalori/app/src/main/res/layout/activity_new_meal.xml" value="0.1" />
+        <entry key="..\:/Users/onur9/IdeaProjects/kalori/app/src/main/res/layout/activity_new_meal.xml" value="0.2" />
         <entry key="..\:/Users/onur9/IdeaProjects/kalori/app/src/main/res/layout/activity_new_user.xml" value="0.264" />
         <entry key="..\:/Users/onur9/IdeaProjects/kalori/app/src/main/res/layout/activity_profil.xml" value="0.176" />
         <entry key="..\:/Users/onur9/IdeaProjects/kalori/app/src/main/res/layout/activity_statistics.xml" value="0.176" />
+        <entry key="..\:/Users/onur9/IdeaProjects/kalori/app/src/main/res/layout/add_water_dialog.xml" value="0.2695984703632887" />
         <entry key="..\:/Users/onur9/IdeaProjects/kalori/app/src/main/res/layout/as.xml" value="0.4" />
         <entry key="..\:/Users/onur9/IdeaProjects/kalori/app/src/main/res/layout/calorie_history.xml" value="0.1" />
         <entry key="..\:/Users/onur9/IdeaProjects/kalori/app/src/main/res/layout/change_weight_diaolog.xml" value="0.2" />
