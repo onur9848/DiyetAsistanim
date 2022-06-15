@@ -1,23 +1,28 @@
 package com.example.kalori.activity;
 
 import android.content.Intent;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.example.kalori.R;
+import com.example.kalori.realm.mealListTable;
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.concurrent.locks.ReadWriteLock;
 
 public class newMealActivity extends AppCompatActivity {
 
     Realm realm;
     SearchView searchView;
+    ImageView addButton;
     ListView listView;
     ArrayList<Meal> mealsArray = new ArrayList<Meal>();
 
@@ -25,26 +30,109 @@ public class newMealActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_meal);
-        listMeal();
+        realmTanimla();
         tanimla();
-        listele(getStrings());
-        search();
+        realmControlState();
+
+
+
+    }
+
+    private void realmControlState() {
+        if (realm.where(mealListTable.class).findAll().isEmpty()){
+            getCsvtoList();
+            realmAdd();
+        }
+        else {
+            listele(getStrings());
+            search();
+            addNewMeal();
+        }
+
+    }
+
+    private void addNewMeal() {
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(newMealActivity.this, addNewMealActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void realmTanimla() {
+        realm = Realm.getDefaultInstance();
+    }
+
+    private void deleteAllDailyMealTable() {
+        RealmResults<mealListTable> table = realm.where(mealListTable.class).findAll();
+        realm.beginTransaction();
+        for (mealListTable tables : table) {
+            tables.deleteFromRealm();
+
+        }
+        realm.commitTransaction();
+    }
+
+    private void realmAdd() {
+
+        realm.executeTransactionAsync(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                for (int i = 0; i < mealsArray.size(); i++) {
+                    mealListTable table = realm.createObject(mealListTable.class);
+                    String mealname, serving, stAmount;
+                    double calorie, protein, carbonhydrat, fat, amount;
+                    mealname = mealsArray.get(i).getMealName();
+                    serving = mealsArray.get(i).getServing();
+                    stAmount = mealsArray.get(i).getAmount().replaceAll("g", "");
+                    stAmount = stAmount.replace("ml", "");
+                    amount = Double.parseDouble(stAmount);
+                    carbonhydrat = Double.parseDouble(mealsArray.get(i).getCarbohydrate().replaceAll("g", ""));
+                    protein = Double.parseDouble(mealsArray.get(i).getProtein().replaceAll("g", ""));
+                    fat = Double.parseDouble(mealsArray.get(i).getFat().replaceAll("g", ""));
+                    calorie = Double.parseDouble(mealsArray.get(i).getCalorie().replaceAll("kcal", ""));
+
+                    table.setMealName(mealname);
+                    table.setAmount(amount);
+                    table.setServing(serving);
+                    table.setCarbohydrate(carbonhydrat);
+                    table.setProtein(protein);
+                    table.setFat(fat);
+                    table.setCalorie(calorie);
+                }
+
+            }
+        }, new Realm.Transaction.OnSuccess() {
+            @Override
+            public void onSuccess() {
+                Toast.makeText(newMealActivity.this, "listele", Toast.LENGTH_SHORT).show();
+                listele(getStrings());
+                search();
+
+            }
+        }, new Realm.Transaction.OnError() {
+            @Override
+            public void onError(Throwable error) {
+
+            }
+        });
 
 
     }
 
     private void clickMeal(String[] meals) {
 
+        RealmResults<mealListTable> tables =realm.where(mealListTable.class).findAll();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 //                Toast.makeText(newMealActivity.this, meals[i], Toast.LENGTH_SHORT).show();
                 String getMealName = meals[i];
                 Intent intent = new Intent(newMealActivity.this, MealDetailActivity.class);
-                intent.putExtra("key", getMealName);
-                String[] MealDetail = GetMealDetails(getMealName);
-                intent.putExtra("mealDetailKey", MealDetail);
-
+                mealListTable MealDetail = GetMealDetails(getMealName);
+                intent.putExtra("mealDetailKey", MealDetail.getMealName());
                 startActivity(intent);
 
             }
@@ -52,25 +140,19 @@ public class newMealActivity extends AppCompatActivity {
 
     }
 
-    private String[] GetMealDetails(String getMealName) {
+    private mealListTable GetMealDetails(String getMealName) {
         String[] allindexdata = getStrings();
         String[] mealDetail = new String[7];
+
         int i;
         for (i = 0; i < allindexdata.length; i++) {
             String s = allindexdata[i];
-            if (s == getMealName)
+            if (s.equals(getMealName))
                 break;
         }
-        Meal newMeal = mealsArray.get(i);
-        mealDetail[0] = newMeal.getMealName();
-        mealDetail[1] = newMeal.getAmount();
-        mealDetail[2] = newMeal.getServing();
-        mealDetail[3] = newMeal.getCarbohydrate();
-        mealDetail[4] = newMeal.getProtein();
-        mealDetail[5] = newMeal.getFat();
-        mealDetail[6] = newMeal.getCalorie();
+        mealListTable mealDetails = realm.where(mealListTable.class).findAll().get(i);
 
-        return mealDetail;
+        return mealDetails;
     }
 
     private void search() {
@@ -113,10 +195,11 @@ public class newMealActivity extends AppCompatActivity {
     }
 
     public String[] getStrings() {
-        String[] mealName = new String[233];
+        String[] mealName = new String[realm.where(mealListTable.class).findAll().size()];
         int i = 0;
-        for (Meal meal : mealsArray) {
-            mealName[i] = meal.getMealName().toString();
+        RealmResults<mealListTable> list = realm.where(mealListTable.class).findAll();
+        for (mealListTable object : list) {
+            mealName[i] = object.getMealName();
             i++;
         }
         return mealName;
@@ -125,9 +208,10 @@ public class newMealActivity extends AppCompatActivity {
     private void tanimla() {
         searchView = (SearchView) findViewById(R.id.searchMeal);
         listView = (ListView) findViewById(R.id.listMeal);
+        addButton = (ImageView) findViewById(R.id.addNewMealButton);
     }
 
-    void listMeal() {
+    void getCsvtoList() {
         InputStream is = getResources().openRawResource(R.raw.test);
 
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is, Charset.defaultCharset()))) {

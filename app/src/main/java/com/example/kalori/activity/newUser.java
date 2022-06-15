@@ -25,7 +25,9 @@ public class newUser extends AppCompatActivity {
     EditText Name, Surname, Height, Weight, Birthday;
     Button loginButton;
     RadioGroup cinsiyetRadioButton;
+    RadioGroup optionRadioGroup;
     RadioButton selectedSex;
+    RadioButton selectedOption;
 
 
     @Override
@@ -74,6 +76,7 @@ public class newUser extends AppCompatActivity {
         Birthday = (EditText) findViewById(R.id.birthday);
         loginButton = (Button) findViewById(R.id.login);
         cinsiyetRadioButton = (RadioGroup) findViewById(R.id.sexRadioButtonUser);
+        optionRadioGroup = (RadioGroup) findViewById(R.id.profilOptionRadioGruop);
         realm = Realm.getDefaultInstance();
 
     }
@@ -90,8 +93,10 @@ public class newUser extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int selectId = cinsiyetRadioButton.getCheckedRadioButtonId();
-                selectedSex = findViewById(selectId);
+                int selectOptionId = optionRadioGroup.getCheckedRadioButtonId();
+                int selectSexId = cinsiyetRadioButton.getCheckedRadioButtonId();
+                selectedSex = findViewById(selectSexId);
+
                 if (checkFields()) {
                     final boolean user = true;
                     final String name = Name.getText().toString();
@@ -100,7 +105,9 @@ public class newUser extends AppCompatActivity {
                     final Double weight = Double.parseDouble(Weight.getText().toString());
                     final String birthday = Birthday.getText().toString();
                     final String cinsiyet = selectedSex.getText().toString();
-                    loginset(user, name, surname, height, weight, birthday, cinsiyet);
+                    final int tercih = selectOptionId;
+                    userTable newUser = new userTable(user,name,surname,height,weight,birthday,cinsiyet,tercih);
+                    loginset(newUser);
                 } else
                     Toast.makeText(newUser.this, "Lütfen Tüm kısımları doldurunuz", Toast.LENGTH_SHORT).show();
 
@@ -122,31 +129,25 @@ public class newUser extends AppCompatActivity {
             Toast.makeText(this, "false döndü", Toast.LENGTH_SHORT).show();
             return false;
         }
-//        String deneme = "Name: "+Name.getText().toString().isEmpty()+
-//                "\nsurname: "+ Surname.getText().toString().isEmpty()+
-//                "\nHeight: "+Height.getText().toString().isEmpty()+
-//                "\nWeight: "+Weight.getText().toString().isEmpty()+
-//                "\nbirdhday: "+Birthday.getText().toString().isEmpty()+
-//                "\nCinsiyet: "+cinsiyetRadioButton.isActivated();
-//        Toast.makeText(this, deneme, Toast.LENGTH_LONG).show();
-//        return false;
+
     }
 
-    private void loginset(final boolean users, final String names, final String surnames, final Double heights, final Double weights, final String birthdays, final String cinsiyet) {
+    private void loginset(userTable object) {
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
                 Date datenow = Date.from(Instant.now());
                 userTable userTable = realm.createObject(com.example.kalori.realm.userTable.class);
                 weightHistory weightHistory = realm.createObject(com.example.kalori.realm.weightHistory.class);
-                userTable.setUser(users);
-                userTable.setDbname(names);
-                userTable.setDbsurname(surnames);
-                userTable.setDbheight(heights);
-                userTable.setDbweight(weights);
-                userTable.setDbbirthday(birthdays);
-                userTable.setDbcinsiyet(cinsiyet);
-                weightHistory.setWeight(weights);
+                userTable.setUser(object.getUser());
+                userTable.setDbname(object.getDbname());
+                userTable.setDbsurname(object.getDbsurname());
+                userTable.setDbheight(object.getDbheight());
+                userTable.setDbweight(object.getDbweight());
+                userTable.setDbbirthday(object.getDbbirthday());
+                userTable.setDbcinsiyet(object.getDbcinsiyet());
+                userTable.setTercih(object.getTercih());
+                weightHistory.setWeight(object.getDbweight());
                 weightHistory.setDate(datenow);
 
             }

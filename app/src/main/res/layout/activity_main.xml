@@ -66,7 +66,8 @@
                         android:id="@+id/age"
                         style="@style/mainTextView"
                         android:textColor="@color/white"
-                        android:textSize="18sp" />
+                        android:textSize="18sp"
+                        />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -207,7 +208,10 @@
             android:gravity="center"
             android:text="Naber"
             android:textSize="22sp"
-            android:textStyle="bold" />
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:shadowColor="#000000"
+            android:shadowRadius="10.0"/>
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView

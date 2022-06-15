@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Kalori">
         <activity
+            android:name=".activity.addNewMealActivity"
+            android:exported="true" />
+        <activity
             android:name=".activity.MealDetailActivity"
             android:exported="true" />
         <activity

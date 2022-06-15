@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:paddingHorizontal="40sp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20sp"
+        android:textColor="#959595"
+        android:padding="15dp"
+        android:background="#000000"
+        android:text="Yeni Yemek"
+        android:textSize="24sp"/>
+    <EditText
+        android:layout_width="match_parent"
+        style="@style/profilEdittext"
+        android:id="@+id/newMealName"
+        android:hint="@string/yemek_adi"
+        android:layout_height="wrap_content"/>
+    <EditText
+        android:layout_width="match_parent"
+        style="@style/profilEdittext"
+        android:inputType="numberDecimal"
+        android:id="@+id/newMealAmount"
+        android:hint="@string/gramaj_g_ml"
+        android:layout_height="wrap_content"/>
+    <EditText
+        android:layout_width="match_parent"
+        style="@style/profilEdittext"
+        android:id="@+id/newMealServing"
+        android:hint="@string/porsiyon"
+        android:layout_height="wrap_content"/>
+    <EditText
+        android:id="@+id/newMealCarbonhydrat"
+        android:layout_width="match_parent"
+        style="@style/profilEdittext"
+        android:inputType="numberDecimal"
+        android:hint="@string/karbonhidrat"
+        android:layout_height="wrap_content"/>
+    <EditText
+        android:id="@+id/newMealFat"
+        android:layout_width="match_parent"
+        style="@style/profilEdittext"
+        android:inputType="numberDecimal"
+        android:hint="@string/ya"
+        android:layout_height="wrap_content"/>
+    <EditText
+        android:id="@+id/newMealProtein"
+        android:layout_width="match_parent"
+        style="@style/profilEdittext"
+        android:inputType="numberDecimal"
+        android:hint="@string/protein"
+        android:layout_height="wrap_content"/>
+    <EditText
+        android:id="@+id/newMealCalorie"
+        android:layout_width="match_parent"
+        style="@style/profilEdittext"
+        android:inputType="numberDecimal"
+        android:hint="@string/kalori_kcal"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/newMealaddButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:textColor="@color/proteincolor"
+        android:text="Ekle"/>
+
+
+
+
+</LinearLayout>

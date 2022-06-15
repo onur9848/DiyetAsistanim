@@ -13,7 +13,9 @@ import android.os.Bundle;
 import com.example.kalori.R;
 import com.example.kalori.realm.addMealTable;
 import com.example.kalori.realm.dailyMacroDetailTable;
+import com.example.kalori.realm.mealListTable;
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -25,17 +27,19 @@ public class MealDetailActivity extends AppCompatActivity {
 
     TextView mealname, serving, carbohydrate, proteintext, fat, calorie;
     EditText amount;
-    String mealName, gram = " g", kcal = " kcal";
-    String[] mealDetail;
-    String miktar, porsiyon, karbonhidrat, protein, yag, kalori;
+    String gram = " g", kcal = " kcal";
+    String selectMeal;
     Button addmeal;
     Realm realm;
+    RealmResults<mealListTable> mealList;
+    mealListTable selectMealObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meal_detail);
         tanimla();
+        getMealIndexData();
         doldur();
         newMealDetails();
         addMealDay();
@@ -44,18 +48,12 @@ public class MealDetailActivity extends AppCompatActivity {
     }
 
     public void tanimla() {
+        realm = Realm.getDefaultInstance();
         Bundle data = getIntent().getExtras();
-        mealName = data.getCharSequence("key").toString();
-        mealDetail = data.getStringArray("mealDetailKey");
-        miktar = mealDetail[1].replace('g', ' ').trim();
-        miktar = miktar.replace("ml","");
-        porsiyon = mealDetail[2];
-        karbonhidrat = mealDetail[3].replace('g', ' ').trim();
-        protein = mealDetail[4].replace('g', ' ').trim();
-        yag = mealDetail[5].replace('g', ' ').trim();
-        kalori = mealDetail[6].replace("kcal", " ").trim();
-
-
+        selectMeal = data.getString("mealDetailKey");
+        mealList = realm.where(mealListTable.class).findAll();
+        selectMealObject = new mealListTable();
+        
         mealname = (TextView) findViewById(R.id.mealName);
         amount = (EditText) findViewById(R.id.miktar);
         serving = (TextView) findViewById(R.id.porsiyon);
@@ -64,12 +62,28 @@ public class MealDetailActivity extends AppCompatActivity {
         fat = (TextView) findViewById(R.id.yag);
         calorie = (TextView) findViewById(R.id.kalori);
         addmeal = (Button) findViewById(R.id.addMeal);
-        realm = Realm.getDefaultInstance();
 
+
+    }
+    private void getMealIndexData(){
+        for (mealListTable object:mealList) {
+            if (selectMeal.equals(object.getMealName())){
+                selectMealObject.setMealName(object.getMealName());
+                selectMealObject.setAmount(object.getAmount());
+                selectMealObject.setServing(object.getServing());
+                selectMealObject.setCarbohydrate(object.getCarbohydrate());
+                selectMealObject.setProtein(object.getProtein());
+                selectMealObject.setFat(object.getFat());
+                selectMealObject.setCalorie(object.getCalorie());
+                break;
+            }
+            
+            
+        }
     }
 
     private void addMealDay() {
-        addMealTable addMealTable = new addMealTable();
+        
         String myFormat = "MM/dd/yyyy";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(myFormat, Locale.getDefault());
 
@@ -77,15 +91,27 @@ public class MealDetailActivity extends AppCompatActivity {
         addmeal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                addMealTable addMealTable = new addMealTable();
+                
                 final Date today = Date.from(Instant.now());
                 final String addMealName = mealname.getText().toString();
+                final double addMealAmount = getAddMealAmount();
                 final double addcarbonhydrat = Double.parseDouble(carbohydrate.getText().toString().replace('g', ' '));
                 final double addprotein = Double.parseDouble(proteintext.getText().toString().replace('g', ' '));
                 final double addfat = Double.parseDouble(fat.getText().toString().replace('g', ' '));
                 final double addcalorie = Double.parseDouble(calorie.getText().toString().replace("kcal", " "));
+               addMealTable.setDay(today);
+               addMealTable.setMealName(addMealName);
+               addMealTable.setMealAmount(addMealAmount);
+               addMealTable.setCarbonhydrat(addcarbonhydrat);
+               addMealTable.setProtein(addprotein);
+               addMealTable.setFat(addfat);
+               addMealTable.setCalorie(addcalorie);
+                
+                
 
 
-                addMealSet(today, addMealName, addcarbonhydrat, addprotein, addfat, addcalorie);
+                addMealSet(addMealTable);
 
             }
         });
@@ -93,26 +119,23 @@ public class MealDetailActivity extends AppCompatActivity {
 
     }
 
-    private void addMealSet(Date today, String addMealName, double addcarbonhydrat, double addprotein, double addfat, double addcalorie) {
+    private void addMealSet(addMealTable object) {
 
-        double addMealAmount;
-        if(amount.getText().toString().length()== 0 )
-            addMealAmount = Double.parseDouble(miktar);
-        else
-            addMealAmount = Double.parseDouble(amount.getText().toString());
+
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
                 double totalcalorie = 0 , totalprotein=0,totalcarbonhydrat=0,totalfat=0;
                 Date date = Date.from(Instant.now());
                 addMealTable addMealTable = realm.createObject(com.example.kalori.realm.addMealTable.class);
-                addMealTable.setDay(today);
-                addMealTable.setMealName(addMealName);
-                addMealTable.setMealAmount(addMealAmount);
-                addMealTable.setCarbonhydrat(addcarbonhydrat);
-                addMealTable.setProtein(addprotein);
-                addMealTable.setFat(addfat);
-                addMealTable.setCalorie(addcalorie);
+//                addMealTable=object;
+                addMealTable.setDay(object.getDay());
+                addMealTable.setMealName(object.getMealName());
+                addMealTable.setMealAmount(object.getMealAmount());
+                addMealTable.setCarbonhydrat(object.getCarbonhydrat());
+                addMealTable.setProtein(object.getProtein());
+                addMealTable.setFat(object.getFat());
+                addMealTable.setCalorie(object.getCalorie());
             }
         }, new Realm.Transaction.OnSuccess() {
             @Override
@@ -130,13 +153,23 @@ public class MealDetailActivity extends AppCompatActivity {
 
     }
 
+
+    private double getAddMealAmount() {
+        double addMealAmount;
+        if(amount.getText().toString().length()== 0 )
+            addMealAmount = selectMealObject.getAmount();
+        else
+            addMealAmount = Double.parseDouble(amount.getText().toString());
+        return addMealAmount;
+    }
+
     @SuppressLint("SetTextI18n")
     public void doldur() {
 
-        mealname.setText(mealName);
+        mealname.setText(selectMealObject.getMealName());
 
-        amount.setHint(miktar);
-        serving.setText(porsiyon);
+        amount.setHint(selectMealObject.getAmount()+"");
+        serving.setText(selectMealObject.getServing());
 //        carbohydrate.setText(karbonhidrat + gram);
 //        proteintext.setText(protein + gram);
 //        fat.setText(yag + gram);
@@ -145,7 +178,7 @@ public class MealDetailActivity extends AppCompatActivity {
     }
 
     public void newMealDetails() {
-        valueUpdate(Double.parseDouble(miktar));
+        valueUpdate(selectMealObject.getAmount());
         amount.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -164,7 +197,7 @@ public class MealDetailActivity extends AppCompatActivity {
 //                Toast.makeText(MealDetailActivity.this, "3. if", Toast.LENGTH_SHORT).show();
                 if (editable.toString().length() == 0) {
                     double value = 0;
-                    valueUpdate(Double.parseDouble(miktar));
+                    valueUpdate(selectMealObject.getAmount());
                 } else {
                     valueUpdate(Double.parseDouble(editable.toString()));
                 }
@@ -174,15 +207,16 @@ public class MealDetailActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     public void valueUpdate(double getNewMiktar) {
-        double newKarbonhidrat;
-        double newProtein;
-        double newYag;
-        double newKalori;
+        double newKarbonhidrat,karbonhidrat=selectMealObject.getCarbohydrate();
+        double newProtein,protein=selectMealObject.getProtein();
+        double newYag,yag=selectMealObject.getFat();
+        double newKalori,kalori=selectMealObject.getCalorie();
+        double miktar =selectMealObject.getAmount();
 
-        newKarbonhidrat = Double.parseDouble(karbonhidrat) * (getNewMiktar / Double.parseDouble(miktar));
-        newProtein = Double.parseDouble(protein) * (getNewMiktar / Double.parseDouble(miktar));       //yeni Gramaja göre değerlerin hesaplanması
-        newYag = Double.parseDouble(yag) * (getNewMiktar / Double.parseDouble(miktar));
-        newKalori = Double.parseDouble(kalori) * (getNewMiktar / Double.parseDouble(miktar));
+        newKarbonhidrat = karbonhidrat * (getNewMiktar / miktar);
+        newProtein = protein * (getNewMiktar / miktar);       //yeni Gramaja göre değerlerin hesaplanması
+        newYag = yag * (getNewMiktar / miktar);
+        newKalori = kalori * (getNewMiktar / miktar);
 
         newKarbonhidrat = Math.round(newKarbonhidrat * 100.0) / 100.0;
         newProtein = Math.round(newProtein * 100.0) / 100.0;                                // Virgülden sonra 2 basamak göstermek için

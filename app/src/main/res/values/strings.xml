@@ -4,5 +4,12 @@
     <string name="profile">Profile</string>
     <string name="isim">Onur Enes Gündoğdu</string>
     <string name="_1_bardak_su_200ml">1 Bardak su (200ml)</string>
+    <string name="yemek_adi">Yemek Adi</string>
+    <string name="gramaj_g_ml">Gramaj (g/ml)</string>
+    <string name="porsiyon">Porsiyon</string>
+    <string name="karbonhidrat">Karbonhidrat</string>
+    <string name="ya">Yağ</string>
+    <string name="protein">Protein</string>
+    <string name="kalori_kcal">Kalori (kcal)</string>
     <dimen name="meal_detail_size">22sp</dimen>
 </resources>

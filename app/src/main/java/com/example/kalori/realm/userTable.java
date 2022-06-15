@@ -10,7 +10,21 @@ public class userTable extends RealmObject {
     private double dbweight;
     private String dbbirthday;
     private String dbcinsiyet;
+    private int tercih; //1-kilo verme, 2-sabit kilo, 3-kilo alma.
 
+    public userTable(Boolean user, String dbname, String dbsurname, double dbheight, double dbweight, String dbbirthday, String dbcinsiyet, int tercih) {
+        this.user = user;
+        this.dbname = dbname;
+        this.dbsurname = dbsurname;
+        this.dbheight = dbheight;
+        this.dbweight = dbweight;
+        this.dbbirthday = dbbirthday;
+        this.dbcinsiyet = dbcinsiyet;
+        this.tercih = tercih;
+    }
+
+    public userTable() {
+    }
 
     public Boolean getUser() {
         return user;
@@ -67,5 +81,13 @@ public class userTable extends RealmObject {
 
     public void setDbcinsiyet(String dbcinsiyet) {
         this.dbcinsiyet = dbcinsiyet;
+    }
+
+    public int getTercih() {
+        return tercih;
+    }
+
+    public void setTercih(int tercih) {
+        this.tercih = tercih;
     }
 }

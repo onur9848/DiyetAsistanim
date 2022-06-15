@@ -69,6 +69,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void deleteRealmDatabase() {
+        realm.beginTransaction();
+        realm.commitTransaction();
+
+    }
+
     @Override
     public void onResume() {
 
@@ -180,14 +186,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
     @SuppressLint("SetTextI18n")
-    public void setWaterStatusBar(){
+    public void setWaterStatusBar() {
         String text;
-        int proggresBarStatus=0;
+        int proggresBarStatus = 0;
         double icilensu;
         proggresBarStatus = getProggresBarStatus();
-        if (proggresBarStatus>100){
-            proggresBarStatus=100;
+        if (proggresBarStatus > 100) {
+            proggresBarStatus = 100;
             progressBarText.setText("Tebrikler günlük su içme hedefinizi tamamladınız.");
         }
         dailyWaterBar.setProgress(proggresBarStatus);
@@ -197,13 +204,17 @@ public class MainActivity extends AppCompatActivity {
         double icilensu;
         String text;
         int proggresBarStatus;
-        dailyWaterTable lastTable = realm.where(dailyWaterTable.class).findAll().last();
-        assert lastTable != null;
-        icilensu = lastTable.getDailyWater();
-        text =Double.toString(icilensu/1000)+" L/"+gunlukSu+" L";
+
+        if (!realm.where(dailyWaterTable.class).findAll().isEmpty()) {
+            dailyWaterTable lastTable = realm.where(dailyWaterTable.class).findAll().last();
+            icilensu = lastTable.getDailyWater();
+        } else {
+            icilensu = 0;
+        }
+        text = Double.toString(icilensu / 1000) + " L/" + gunlukSu + " L";
         progressBarText.setText(text);
 
-        proggresBarStatus= (int) Math.round(icilensu/gunlukSu/10);
+        proggresBarStatus = (int) Math.round(icilensu / gunlukSu / 10);
         return proggresBarStatus;
     }
 
@@ -227,10 +238,10 @@ public class MainActivity extends AppCompatActivity {
                 setDailyWaterTable(dailyWaterTables);
                 dialog.hide();
 
-                int proggresBarStatus=0;
+                int proggresBarStatus = 0;
                 proggresBarStatus = getProggresBarStatus();
-                if (proggresBarStatus>100){
-                    proggresBarStatus=100;
+                if (proggresBarStatus > 100) {
+                    proggresBarStatus = 100;
                     progressBarText.setText("Tebrikler günlük su içme hedefinizi tamamladınız.");
                 }
 

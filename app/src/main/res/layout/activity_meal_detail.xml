@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="50dp"
+    android:gravity="center_horizontal"
     android:orientation="vertical"
     android:layout_marginLeft="10dp"
     tools:context=".activity.MealDetailActivity">
@@ -12,7 +14,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/mealName"
-        android:textSize="@dimen/meal_detail_size"
+        android:textColor="@color/fatcolor"
+        android:padding="15dp"
+        android:textSize="28sp"
         android:gravity="center" />
 
     <LinearLayout
@@ -23,29 +27,35 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Miktar"
+            android:layout_weight="2"
+            android:text="Miktar:"
             android:textSize="@dimen/meal_detail_size"
-            android:textAlignment="center"
+            android:textAlignment="textEnd"
             android:layout_marginVertical="15dp"
             android:layout_marginLeft="30dp" />
 
-        <EditText
-            android:id="@+id/miktar"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:inputType="number"
-            android:textSize="@dimen/meal_detail_size"
-            android:singleLine="true"
-            android:layout_marginLeft="25dp"
-            android:gravity="center" />
+            android:layout_height="wrap_content"
+            android:layout_weight="2">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="gram"
-            android:layout_marginTop="15dp"
-            android:textSize="@dimen/meal_detail_size" />
+            <EditText
+                android:id="@+id/miktar"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:inputType="number"
+                android:textSize="@dimen/meal_detail_size"
+                android:singleLine="true"
+                android:layout_marginLeft="25dp"
+                android:gravity="center" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="g/ml"
+                android:layout_marginTop="15dp"
+                android:textSize="@dimen/meal_detail_size" />
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -57,13 +67,11 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="4"
+            android:layout_weight="2"
             android:text="Porsiyon:"
             android:textSize="@dimen/meal_detail_size"
             android:textAlignment="textEnd"
-            android:layout_marginVertical="10dp"
-
-            />
+            android:layout_marginVertical="10dp" />
 
         <TextView
             android:id="@+id/porsiyon"
@@ -84,7 +92,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="4"
+            android:layout_weight="2"
             android:text="Karbonhidrat: "
             android:textSize="@dimen/meal_detail_size"
             android:textAlignment="textEnd"
@@ -110,7 +118,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="4"
+            android:layout_weight="2"
             android:text="Protein: "
             android:textSize="@dimen/meal_detail_size"
             android:textAlignment="textEnd"
@@ -136,7 +144,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="4"
+            android:layout_weight="2"
             android:text="Yağ: "
             android:textSize="@dimen/meal_detail_size"
             android:textAlignment="textEnd"
@@ -162,7 +170,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="4"
+            android:layout_weight="2"
             android:text="Kalori: "
             android:textSize="@dimen/meal_detail_size"
             android:textAlignment="textEnd"
