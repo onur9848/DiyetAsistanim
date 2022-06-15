@@ -9,7 +9,7 @@ public class userTable extends RealmObject {
     private double dbheight;
     private double dbweight;
     private String dbbirthday;
-    private String dbcinsiyet;
+    private String dbcinsiyet; // "Erkek","Kadın"
     private int tercih; //1-kilo verme, 2-sabit kilo, 3-kilo alma.
 
     public userTable(Boolean user, String dbname, String dbsurname, double dbheight, double dbweight, String dbbirthday, String dbcinsiyet, int tercih) {

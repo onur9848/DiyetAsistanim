@@ -11,6 +11,7 @@ import com.example.kalori.R;
 import com.example.kalori.adapter.ViewPagerAdapter;
 import com.example.kalori.realm.addMealTable;
 import com.example.kalori.realm.dailyMacroDetailTable;
+import com.example.kalori.realm.userTable;
 import com.example.kalori.realm.weightHistory;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
@@ -24,10 +25,10 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 public class StatisticsActivity extends AppCompatActivity {
 
@@ -36,6 +37,7 @@ public class StatisticsActivity extends AppCompatActivity {
     SimpleDateFormat myFormat;
     LineChart mpLinechart;
     Spinner dayofrange;
+    float avarageCalorie;
     ArrayAdapter<String> dayofrangeAdapter;
     List<String> spinnnerList;
     List<dayCalorie> totalCalorieAday;
@@ -52,16 +54,58 @@ public class StatisticsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_statistics);
         tanimla();
         listele();
+        avarageCalorieCalculate();
         doldurDailyMacro();
         setWeightHistorymp();
-        kaloriKiyasla();
+        kaloriKiyaslaifState();
         setSpinner();
 
 
     }
 
-    private void barChartDoldur(int index) {
+    private int getAge(String birthday) {
+        String myFormat = "MM/dd/yyyy";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(myFormat, Locale.getDefault());
+        LocalDate dateTime = LocalDate.parse(birthday, formatter);
+        LocalDate dateNow = LocalDate.now();
+        Period diff = Period.between(dateTime, dateNow);
+        return diff.getYears();
+    }
+    private void avarageCalorieCalculate() {
+        userTable user = realm.where(userTable.class).findAll().first();
+        double age = getAge(user.getDbbirthday());
+        if (user.getDbcinsiyet().equals("Erkek")) {
+            if (user.getTercih() == 1) {
+                avarageCalorie = (float) (66+13.7*user.getDbweight()+5* user.getDbheight()-6.8*age)*1.1f;
 
+            } else if (user.getTercih() == 2) {
+                avarageCalorie = (float) (66+13.7*user.getDbweight()+5* user.getDbheight()-6.8*age)*1.4f;
+
+            } else {
+                avarageCalorie = (float) (66+13.7*user.getDbweight()+5* user.getDbheight()-6.8*age)*1.7f;
+
+            }
+
+        } else {
+            if (user.getTercih() == 1) {
+                avarageCalorie = (float) (655+9.6* user.getDbweight()+1.8* user.getDbheight()-4.7*age)*1.1f;
+            } else if (user.getTercih() == 2) {
+                avarageCalorie = (float) (655+9.6* user.getDbweight()+1.8* user.getDbheight()-4.7*age)*1.4f;
+            } else {
+                avarageCalorie = (float) (655+9.6* user.getDbweight()+1.8* user.getDbheight()-4.7*age)*1.7f;
+            }
+        }
+
+    }
+
+    public void kaloriKiyaslaifState() {
+        RealmResults<dailyMacroDetailTable> tables = realm.where(dailyMacroDetailTable.class).findAll();
+        if (!tables.isEmpty()) {
+            kaloriKiyasla();
+        }
+    }
+
+    private void barChartDoldur(int index) {
 
 
         barChart = findViewById(R.id.barChart);
@@ -71,7 +115,7 @@ public class StatisticsActivity extends AppCompatActivity {
         barChart.setDoubleTapToZoomEnabled(false);
         YAxis leftAxis = barChart.getAxisLeft();
 
-        LimitLine ll = new LimitLine(2000f, "Alınması gereken kalori");
+        LimitLine ll = new LimitLine(avarageCalorie, "Alınması gereken kalori");
         ll.setLineColor(Color.RED);
         ll.setLineWidth(4f);
         ll.setTextColor(Color.BLACK);
@@ -112,12 +156,14 @@ public class StatisticsActivity extends AppCompatActivity {
     private void setSpinner() {
         dayofrangeAdapter.setDropDownViewResource(R.layout.my_custom_spinner);
         dayofrange.setAdapter(dayofrangeAdapter);
-
+        RealmResults<dailyMacroDetailTable> tables = realm.where(dailyMacroDetailTable.class).findAll();
         dayofrange.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int index, long l) {
 //                Toast.makeText(StatisticsActivity.this, "Seçilen item:" + adapterView.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
-                barChartDoldur(index);
+                if (!tables.isEmpty()) {
+                    barChartDoldur(index);
+                }
             }
 
             @Override
@@ -159,11 +205,13 @@ public class StatisticsActivity extends AppCompatActivity {
         mpLinechart.setGridBackgroundColor(Color.BLACK);
         mpLinechart.setDragEnabled(true);
 
-        XAxis axis = mpLinechart.getXAxis();
-        axis.setValueFormatter(new myAxisValueFormat(myDay));
-        axis.setGranularity(1);
-        axis.setTextColor(Color.BLUE);
-        axis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        if (myDay.size() > 2) {
+            XAxis axis = mpLinechart.getXAxis();
+            axis.setValueFormatter(new myAxisValueFormat(myDay));
+            axis.setGranularity(1);
+            axis.setTextColor(Color.BLUE);
+            axis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        }
 
     }
 
@@ -187,7 +235,6 @@ public class StatisticsActivity extends AppCompatActivity {
         spinnnerList.add("Haftalık Kalori Tablosu");
         spinnnerList.add("Aylık Kalori Tablosu");
         dayofrangeAdapter = new ArrayAdapter<String>(this, R.layout.my_custom_spinner, spinnnerList);
-
     }
 
     public void doldurDailyMacro() {
@@ -346,6 +393,8 @@ public class StatisticsActivity extends AppCompatActivity {
         totalCalorieAmonth = new ArrayList<dayCalorie>();
         List<Date> myDate = new ArrayList<Date>();
         //günlük
+
+
         for (dailyMacroDetailTable table : tables) {
             dayCalorie item = new dayCalorie();
             myDate.add(table.getDate());
@@ -353,6 +402,8 @@ public class StatisticsActivity extends AppCompatActivity {
             item.setCalorie(table.getDbTotalCalorie());
             totalCalorieAday.add(item);
         }   // Day List
+
+
         List<Calendar> myCalenderList = new ArrayList<Calendar>();
         for (Date date : myDate) {
             Calendar newCal = Calendar.getInstance();
@@ -360,12 +411,14 @@ public class StatisticsActivity extends AppCompatActivity {
             myCalenderList.add(newCal);
         }
 
+
         int hafta, yil;
         hafta = myCalenderList.get(0).get(Calendar.WEEK_OF_YEAR);
         yil = myCalenderList.get(0).get(Calendar.YEAR);
         SimpleDateFormat listFormat = new SimpleDateFormat("MMMM/yyyy");
-
         double totalkaloriHaftalik = 0;
+
+
         for (int i = 0; i < myCalenderList.size(); ) {
             dayCalorie item = new dayCalorie();
             if (hafta == myCalenderList.get(i).get(Calendar.WEEK_OF_YEAR) && yil == myCalenderList.get(i).get(Calendar.YEAR)) {

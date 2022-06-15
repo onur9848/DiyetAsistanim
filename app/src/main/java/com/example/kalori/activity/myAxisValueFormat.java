@@ -12,6 +12,10 @@ public class myAxisValueFormat extends ValueFormatter {
 
     @Override
     public String getFormattedValue(float value) {
-        return mdays.get((int) value);
+        if (value==-1){
+            return mdays.get(0);
+        }
+        else {
+        return mdays.get((int) value);}
     }
 }

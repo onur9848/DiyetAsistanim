@@ -40,13 +40,14 @@ public class MainActivity extends AppCompatActivity {
     Realm realm;
 
     TextView name_surname, weight_height, age, abki, suEkleText, progressBarText;
-    TextView totalprotein, totalfat, totalkarbonhidrat, toplamKalori;
+    TextView totalprotein, totalfat, totalkarbonhidrat, toplamKalori,hedefKalori;
     Button istatistik, yeniogun, profil, suEkleButton;
     ProgressBar dailyWaterBar;
     ImageView deleteimage;
     RecyclerView list_recycler;
     LinearLayout mainpage;
     MealAdapter adapter;
+    float avarageCalorie;
     double gunlukSu;
     SimpleDateFormat myFormat;
 
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
             kullanicibilgi();
             showList();
             setToplamKalori();
+            avarageCalorieCalculate();
         }
     }
 
@@ -108,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
         dailyWaterBar = (ProgressBar) findViewById(R.id.waterBar);
         myFormat = new SimpleDateFormat("dd/MM/yyyy");
         progressBarText = (TextView) findViewById(R.id.progrsBarText);
+        hedefKalori = (TextView) findViewById(R.id.hedefKalori);
     }
 
     public void clickAction(View view) {
@@ -164,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
         gunlukSu = yuvarlama(gunlukSu);
 
 
-        Sname = name + " " + surname;
+        Sname = name + " \n" + surname;
         Sweight_height = "Boy: " + height + " Kilo: " + weight;
         Sage = "Yaş: " + newAge;
         Sbki = "Bki: " + Math.round(bki * 100.0) / 100.0;
@@ -326,6 +329,33 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+    private void avarageCalorieCalculate() {
+        userTable user = realm.where(userTable.class).findAll().first();
+        double age = Double.parseDouble(getAge(user.getDbbirthday()));
+
+        if (user.getDbcinsiyet().equals("Erkek")) {
+            if (user.getTercih() == 1) {
+                avarageCalorie = (float) (66+13.7*user.getDbweight()+5* user.getDbheight()-6.8*age)*1.1f;
+
+            } else if (user.getTercih() == 2) {
+                avarageCalorie = (float) (66+13.7*user.getDbweight()+5* user.getDbheight()-6.8*age)*1.4f;
+
+            } else {
+                avarageCalorie = (float) (66+13.7*user.getDbweight()+5* user.getDbheight()-6.8*age)*1.7f;
+
+            }
+
+        } else {
+            if (user.getTercih() == 1) {
+                avarageCalorie = (float) (655+9.6* user.getDbweight()+1.8* user.getDbheight()-4.7*age)*1.1f;
+            } else if (user.getTercih() == 2) {
+                avarageCalorie = (float) (655+9.6* user.getDbweight()+1.8* user.getDbheight()-4.7*age)*1.4f;
+            } else {
+                avarageCalorie = (float) (655+9.6* user.getDbweight()+1.8* user.getDbheight()-4.7*age)*1.7f;
+            }
+        }
+
+    }
 
     private String getAge(String birthday) {
         String myFormat = "MM/dd/yyyy";
@@ -381,13 +411,14 @@ public class MainActivity extends AppCompatActivity {
         }
         double totalValue = toplamKarbonhidrat + toplamProtein + toplamYag;
         yuzdeKarbon = (toplamKarbonhidrat / totalValue) * 100;
-        yuzdeProtein = (toplamYag / totalValue) * 100;
+        yuzdeProtein = (toplamProtein / totalValue) * 100;
         yuzdeYag = (toplamYag / totalValue) * 100;
 
         totalprotein.setText("Protein: %" + yuvarlama(yuzdeProtein) + "\n" + yuvarlama(toplamProtein) + "gram");
         totalfat.setText("Yag: %" + yuvarlama(yuzdeYag) + "\n" + yuvarlama(toplamYag) + "gram");
         totalkarbonhidrat.setText("Karbohidrat: %" + yuvarlama(yuzdeKarbon) + "\n" + yuvarlama(toplamKarbonhidrat) + "gram");
         toplamKalori.setText(toplamKaloridouble + "");
+        hedefKalori.setText("Hedef: "+yuvarlama(avarageCalorie));
     }
 
     double yuvarlama(double sayi) {
