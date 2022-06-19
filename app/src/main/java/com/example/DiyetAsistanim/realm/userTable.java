@@ -1,4 +1,4 @@
-package com.example.kalori.realm;
+package com.example.DiyetAsistanim.realm;
 
 import io.realm.RealmObject;
 

@@ -1,4 +1,4 @@
-package com.example.kalori.adapter;
+package com.example.DiyetAsistanim.adapter;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,8 +7,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.kalori.R;
-import com.example.kalori.realm.addMealTable;
+import com.example.DiyetAsistanim.R;
+import com.example.DiyetAsistanim.realm.addMealTable;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import java.util.List;

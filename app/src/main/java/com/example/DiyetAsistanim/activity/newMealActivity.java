@@ -1,22 +1,18 @@
-package com.example.kalori.activity;
+package com.example.DiyetAsistanim.activity;
 
 import android.content.Intent;
-import android.os.Parcelable;
 import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import com.example.kalori.R;
-import com.example.kalori.realm.mealListTable;
+import com.example.DiyetAsistanim.R;
+import com.example.DiyetAsistanim.realm.mealListTable;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Locale;
-import java.util.concurrent.locks.ReadWriteLock;
 
 public class newMealActivity extends AppCompatActivity {
 

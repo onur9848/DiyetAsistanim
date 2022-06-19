@@ -1,4 +1,4 @@
-package com.example.kalori.adapter;
+package com.example.DiyetAsistanim.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -11,8 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
-import com.example.kalori.R;
-import com.example.kalori.realm.dailyMacroDetailTable;
+import com.example.DiyetAsistanim.R;
+import com.example.DiyetAsistanim.realm.dailyMacroDetailTable;
 import org.eazegraph.lib.charts.PieChart;
 import org.eazegraph.lib.models.PieModel;
 

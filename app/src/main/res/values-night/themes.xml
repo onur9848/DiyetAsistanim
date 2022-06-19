@@ -47,5 +47,16 @@
         <item name="android:paddingHorizontal">3dp</item>
         <item name="android:textAlignment">center</item>
     </style>
+    <style name="adviceText">
+        <item name="android:padding">10dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/advice_text</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="radius">
+        <item name="android:background">@drawable/only_radius</item>
+
+    </style>
 
 </resources>

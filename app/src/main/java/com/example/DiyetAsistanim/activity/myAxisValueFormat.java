@@ -1,4 +1,4 @@
-package com.example.kalori.activity;
+package com.example.DiyetAsistanim.activity;
 
 import com.github.mikephil.charting.formatter.ValueFormatter;
 

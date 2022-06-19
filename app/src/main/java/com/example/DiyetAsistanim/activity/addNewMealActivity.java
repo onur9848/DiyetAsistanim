@@ -1,14 +1,12 @@
-package com.example.kalori.activity;
+package com.example.DiyetAsistanim.activity;
 
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import com.example.kalori.R;
-import com.example.kalori.realm.addMealTable;
-import com.example.kalori.realm.mealListTable;
+import com.example.DiyetAsistanim.R;
+import com.example.DiyetAsistanim.realm.mealListTable;
 import io.realm.Realm;
 
 public class addNewMealActivity extends AppCompatActivity {

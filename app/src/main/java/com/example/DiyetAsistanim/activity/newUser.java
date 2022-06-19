@@ -1,4 +1,4 @@
-package com.example.kalori.activity;
+package com.example.DiyetAsistanim.activity;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -6,10 +6,10 @@ import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import com.example.kalori.MainActivity;
-import com.example.kalori.R;
-import com.example.kalori.realm.userTable;
-import com.example.kalori.realm.weightHistory;
+import com.example.DiyetAsistanim.MainActivity;
+import com.example.DiyetAsistanim.R;
+import com.example.DiyetAsistanim.realm.userTable;
+import com.example.DiyetAsistanim.realm.weightHistory;
 import io.realm.Realm;
 
 import java.text.SimpleDateFormat;
@@ -137,8 +137,8 @@ public class newUser extends AppCompatActivity {
             @Override
             public void execute(Realm realm) {
                 Date datenow = Date.from(Instant.now());
-                userTable userTable = realm.createObject(com.example.kalori.realm.userTable.class);
-                weightHistory weightHistory = realm.createObject(com.example.kalori.realm.weightHistory.class);
+                userTable userTable = realm.createObject(com.example.DiyetAsistanim.realm.userTable.class);
+                weightHistory weightHistory = realm.createObject(com.example.DiyetAsistanim.realm.weightHistory.class);
                 userTable.setUser(object.getUser());
                 userTable.setDbname(object.getDbname());
                 userTable.setDbsurname(object.getDbsurname());

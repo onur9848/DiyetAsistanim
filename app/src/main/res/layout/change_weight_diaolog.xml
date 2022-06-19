@@ -3,24 +3,27 @@
     android:gravity="center"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    >
+    android:background="#1F1F2C"
+    android:padding="40dp">
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="20dp"
+        style="@style/profilEdittext"
+
         android:textSize="24sp"
-        android:textColor="@color/white"
+        android:inputType="textNoSuggestions|numberSigned"
         android:textAlignment="center"
         android:hint="Yeni Kilonuz"
-        android:id="@+id/yeniKiloText"
-        android:background="#000000" />
+        android:id="@+id/yeniKiloText" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="Kaydet"
-        android:id="@+id/yeniKilokaydet"/>
+        android:id="@+id/yeniKilokaydet"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/carbonhydratcolor" />
 
 
 </LinearLayout>

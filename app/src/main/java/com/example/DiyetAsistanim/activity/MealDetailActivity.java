@@ -1,4 +1,4 @@
-package com.example.kalori.activity;
+package com.example.DiyetAsistanim.activity;
 
 import android.annotation.SuppressLint;
 import android.text.Editable;
@@ -7,18 +7,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import com.example.kalori.R;
-import com.example.kalori.realm.addMealTable;
-import com.example.kalori.realm.dailyMacroDetailTable;
-import com.example.kalori.realm.mealListTable;
+import com.example.DiyetAsistanim.R;
+import com.example.DiyetAsistanim.realm.addMealTable;
+import com.example.DiyetAsistanim.realm.mealListTable;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
@@ -127,7 +124,7 @@ public class MealDetailActivity extends AppCompatActivity {
             public void execute(Realm realm) {
                 double totalcalorie = 0 , totalprotein=0,totalcarbonhydrat=0,totalfat=0;
                 Date date = Date.from(Instant.now());
-                addMealTable addMealTable = realm.createObject(com.example.kalori.realm.addMealTable.class);
+                addMealTable addMealTable = realm.createObject(com.example.DiyetAsistanim.realm.addMealTable.class);
 //                addMealTable=object;
                 addMealTable.setDay(object.getDay());
                 addMealTable.setMealName(object.getMealName());

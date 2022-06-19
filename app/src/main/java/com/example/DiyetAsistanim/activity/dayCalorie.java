@@ -1,4 +1,4 @@
-package com.example.kalori.activity;
+package com.example.DiyetAsistanim.activity;
 
 public class dayCalorie {
     private String dayText;

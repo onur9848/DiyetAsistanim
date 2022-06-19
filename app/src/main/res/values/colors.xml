@@ -15,8 +15,8 @@
     <color name="color_white">#ededf2</color>
     <color name="color_two">#E3E0E0</color>
 
-    <color name="proteincolor">#F9A825</color>
-    <color name="fatcolor">#C62828</color>
-    <color name="carbonhydratcolor">#29B6F6</color>
+    <color name="proteincolor">#9F6B00</color>
+    <color name="fatcolor">#811010</color>
+    <color name="carbonhydratcolor">#11648A</color>
 
 </resources>

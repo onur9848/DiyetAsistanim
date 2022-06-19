@@ -1,4 +1,4 @@
-package com.example.kalori.activity;
+package com.example.DiyetAsistanim.activity;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
@@ -7,12 +7,12 @@ import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.viewpager2.widget.ViewPager2;
-import com.example.kalori.R;
-import com.example.kalori.adapter.ViewPagerAdapter;
-import com.example.kalori.realm.addMealTable;
-import com.example.kalori.realm.dailyMacroDetailTable;
-import com.example.kalori.realm.userTable;
-import com.example.kalori.realm.weightHistory;
+import com.example.DiyetAsistanim.R;
+import com.example.DiyetAsistanim.adapter.ViewPagerAdapter;
+import com.example.DiyetAsistanim.realm.addMealTable;
+import com.example.DiyetAsistanim.realm.dailyMacroDetailTable;
+import com.example.DiyetAsistanim.realm.userTable;
+import com.example.DiyetAsistanim.realm.weightHistory;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.LimitLine;
@@ -180,7 +180,7 @@ public class StatisticsActivity extends AppCompatActivity {
         mpLinechart.setDragEnabled(true);
         mpLinechart.setScaleEnabled(false);
 
-        YAxis leftAxis = mpLinechart.getAxisLeft();
+            YAxis leftAxis = mpLinechart.getAxisLeft();
         leftAxis.removeAllLimitLines();
         leftAxis.enableGridDashedLine(10f, 10f, 0f);
         leftAxis.setDrawLimitLinesBehindData(true);
@@ -239,7 +239,7 @@ public class StatisticsActivity extends AppCompatActivity {
 
     public void doldurDailyMacro() {
         int a = 0;
-        RealmResults<addMealTable> addMealTable = realm.where(com.example.kalori.realm.addMealTable.class).findAll();
+        RealmResults<addMealTable> addMealTable = realm.where(com.example.DiyetAsistanim.realm.addMealTable.class).findAll();
         if (!addMealTable.isEmpty()) {
             dailyMacroDetailTable(addMealTable);
         }
@@ -356,7 +356,7 @@ public class StatisticsActivity extends AppCompatActivity {
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                dailyMacroDetailTable dailyMacroDetailTable = realm.createObject(com.example.kalori.realm.dailyMacroDetailTable.class);
+                dailyMacroDetailTable dailyMacroDetailTable = realm.createObject(com.example.DiyetAsistanim.realm.dailyMacroDetailTable.class);
                 dailyMacroDetailTable.setDate(newobject.getDate());
                 dailyMacroDetailTable.setDbTotalCalorie(yuvarlama(newobject.getDbTotalCalorie()));
                 dailyMacroDetailTable.setDbTotalCarbonhydrat(yuvarlama(newobject.getDbTotalCarbonhydrat()));

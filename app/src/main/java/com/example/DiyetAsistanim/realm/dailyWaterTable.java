@@ -1,7 +1,6 @@
-package com.example.kalori.realm;
+package com.example.DiyetAsistanim.realm;
 
 import io.realm.RealmObject;
-import io.realm.RealmResults;
 
 import java.util.Date;
 

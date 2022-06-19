@@ -1,4 +1,4 @@
-package com.example.kalori;
+package com.example.DiyetAsistanim;
 
 import org.junit.Test;
 

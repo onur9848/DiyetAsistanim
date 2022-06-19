@@ -1,8 +1,7 @@
-package com.example.kalori.realm;
+package com.example.DiyetAsistanim.realm;
 
 import io.realm.RealmObject;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 public class addMealTable extends RealmObject {

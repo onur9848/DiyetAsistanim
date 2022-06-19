@@ -1,4 +1,4 @@
-package com.example.kalori.activity;
+package com.example.DiyetAsistanim.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -7,9 +7,9 @@ import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import com.example.kalori.R;
-import com.example.kalori.realm.userTable;
-import com.example.kalori.realm.weightHistory;
+import com.example.DiyetAsistanim.R;
+import com.example.DiyetAsistanim.realm.userTable;
+import com.example.DiyetAsistanim.realm.weightHistory;
 import io.realm.Realm;
 
 import java.time.Instant;
@@ -34,6 +34,21 @@ public class ProfilActivity extends AppCompatActivity {
         changeWeight();
         kiyaslama();
 
+    }
+
+    private String bkiText(double bki){
+        if (bki<20)
+            return "Zayıf";
+        else if (bki<24.9)
+            return "Normal";
+        else if (bki<29.9)
+            return "Hafif şişman";
+        else if (bki<34.9)
+            return "I. Derece Obez";
+        else if (bki<39.9)
+            return "II. Derece Obez";
+        else
+            return "III. Derece Obez";
     }
 
     @SuppressLint("SetTextI18n")
@@ -93,7 +108,7 @@ public class ProfilActivity extends AppCompatActivity {
         isim_text = usertable.getDbname() + " " + usertable.getDbsurname();
         boy_text = "Boyunuz: " + boy_double;
         kilo_text = "Kilonuz: " + kilo_double;
-        bki_text = "BKI: " + yuvarlama(bki_double);
+        bki_text = "BKI: " + yuvarlama(bki_double)+"\n("+bkiText(bki_double)+")";
         dogum_text = "Doğum Tarihiniz: " + usertable.getDbbirthday().toString();
         idealkilo_text = "İdeal Kilonuz: " + yuvarlama(idealkilo_double);
         cinsiyet_text = "Cinsiyet: " + usertable.getDbcinsiyet();
@@ -145,7 +160,7 @@ public class ProfilActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Date datenow = Date.from(Instant.now());
-                userTable userTable = realm.where(com.example.kalori.realm.userTable.class).findFirst();
+                userTable userTable = realm.where(com.example.DiyetAsistanim.realm.userTable.class).findFirst();
                 realm.beginTransaction();
                 double yenikilo = Double.parseDouble(dialogyenikilotext.getText().toString());
                 userTable.setDbweight(yenikilo);
@@ -162,7 +177,7 @@ public class ProfilActivity extends AppCompatActivity {
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                weightHistory weightHistory = realm.createObject(com.example.kalori.realm.weightHistory.class);
+                weightHistory weightHistory = realm.createObject(com.example.DiyetAsistanim.realm.weightHistory.class);
 
                 weightHistory.setWeight(kilo);
                 weightHistory.setDate(tarih);

@@ -1,26 +1,19 @@
-package com.example.kalori.adapter;
+package com.example.DiyetAsistanim.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.view.AttachedSurfaceControl;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Spinner;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
-import com.example.kalori.R;
-import com.example.kalori.activity.dayCalorie;
-import com.example.kalori.activity.myAxisValueFormat;
+import com.example.DiyetAsistanim.R;
+import com.example.DiyetAsistanim.activity.dayCalorie;
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
