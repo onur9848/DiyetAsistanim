@@ -1,0 +1,1 @@
+Günlük yenilen yemeklerin kalorisini ölçebileceğimiz program
